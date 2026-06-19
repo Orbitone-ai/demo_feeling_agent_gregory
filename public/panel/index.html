@@ -4,210 +4,237 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gregory CRM · Feeling Vilanova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --primary:       #1e293b;
-  --primary-light: #334155;
-  --amber:         #f59e0b;
-  --amber-bg:      #fffbeb;
-  --amber-border:  #fcd34d;
-  --green:         #10b981;
-  --green-bg:      #ecfdf5;
-  --red:           #ef4444;
-  --red-bg:        #fef2f2;
-  --orange:        #f97316;
-  --orange-bg:     #fff7ed;
-  --blue:          #3b82f6;
-  --blue-bg:       #eff6ff;
-  --bg:            #f1f5f9;
-  --surface:       #ffffff;
-  --border:        #e2e8f0;
-  --text:          #1e293b;
-  --muted:         #64748b;
-  --radius:        8px;
-  --shadow:        0 1px 3px rgba(0,0,0,.1);
-  --shadow-md:     0 4px 12px rgba(0,0,0,.12);
+  --gold:         #bb9d6c;
+  --gold-light:   #d4b896;
+  --gold-dark:    #8a6f3e;
+  --gold-dim:     rgba(187,157,108,.12);
+  --gold-border:  rgba(187,157,108,.28);
+  --gold-glow:    0 0 24px rgba(187,157,108,.18);
+
+  --bg:           #080808;
+  --surface:      #111111;
+  --surface-2:    #1a1a1a;
+  --surface-3:    #222222;
+
+  --text:         #f0e8d8;
+  --text-muted:   #7a7266;
+  --text-dim:     #3d3a36;
+
+  --border:       rgba(255,255,255,.07);
+  --border-gold:  rgba(187,157,108,.22);
+
+  --green:        #4ade80;
+  --green-bg:     rgba(74,222,128,.1);
+  --green-border: rgba(74,222,128,.25);
+  --red:          #f87171;
+  --red-bg:       rgba(248,113,113,.1);
+  --red-border:   rgba(248,113,113,.25);
+  --orange:       #fb923c;
+  --orange-bg:    rgba(251,146,60,.1);
+  --blue:         #60a5fa;
+  --blue-bg:      rgba(96,165,250,.1);
+  --blue-border:  rgba(96,165,250,.25);
+
+  --radius:       10px;
+  --font:         'Poppins', sans-serif;
 }
+
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:4px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:var(--radius);border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:var(--font);letter-spacing:.3px;transition:all .2s}
+.btn-gold{background:var(--gold);color:#0a0a0a}
+.btn-gold:hover{background:var(--gold-light);box-shadow:var(--gold-glow)}
+.btn-success{background:transparent;border:1.5px solid var(--green);color:var(--green)}
+.btn-success:hover{background:var(--green-bg)}
+.btn-danger{background:transparent;border:1.5px solid var(--red);color:var(--red)}
+.btn-danger:hover{background:var(--red-bg)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border-gold);color:var(--text-muted)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-icon{background:transparent;border:none;cursor:pointer;padding:7px;border-radius:8px;font-size:17px;line-height:1;color:rgba(255,255,255,.35);transition:all .2s}
+.btn-icon:hover{background:rgba(255,255,255,.07);color:var(--gold)}
 
 /* ── LOGIN ── */
-#login{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#1e293b 0%,#334155 100%)}
-.login-card{background:var(--surface);border-radius:16px;padding:48px 40px;width:360px;box-shadow:0 24px 48px rgba(0,0,0,.25);text-align:center}
-.login-emoji{font-size:44px;margin-bottom:12px}
-.login-card h1{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px}
-.login-card .sub{color:var(--muted);font-size:14px;margin-bottom:32px}
-.input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:11px 14px;font-size:15px;outline:none;transition:border-color .2s;background:var(--bg)}
-.input:focus{border-color:var(--primary);background:#fff}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:var(--radius);border:none;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;text-decoration:none}
-.btn-primary{background:var(--primary);color:#fff;width:100%;margin-top:12px;padding:12px}
-.btn-primary:hover{background:var(--primary-light)}
-.btn-success{background:var(--green);color:#fff}
-.btn-success:hover{filter:brightness(.92)}
-.btn-danger{background:var(--red);color:#fff}
-.btn-danger:hover{filter:brightness(.92)}
-.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--text)}
-.btn-ghost:hover{background:var(--bg)}
-.btn-sm{padding:6px 12px;font-size:13px}
-.btn-icon{background:transparent;border:none;cursor:pointer;padding:7px;border-radius:6px;font-size:18px;line-height:1;color:rgba(255,255,255,.7);transition:all .15s}
-.btn-icon:hover{background:rgba(255,255,255,.12);color:#fff}
-.btn-icon-dark{color:var(--muted)}
-.btn-icon-dark:hover{background:var(--bg);color:var(--text)}
-#login-error{color:var(--red);font-size:13px;margin-top:10px;display:none}
+#login{display:flex;align-items:center;justify-content:center;height:100vh;background:radial-gradient(ellipse at center, #1a1208 0%, #080808 70%)}
+.login-card{text-align:center;padding:56px 48px;width:380px;background:var(--surface);border:1px solid var(--border-gold);border-radius:20px;box-shadow:var(--gold-glow),0 32px 64px rgba(0,0,0,.6)}
+.login-brand{font-family:'Dancing Script',cursive;font-size:36px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
+.login-card h1{font-size:15px;font-weight:500;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.login-divider{width:40px;height:1px;background:var(--gold-border);margin:20px auto 28px}
+.login-card p{font-size:12px;color:var(--text-dim);margin-bottom:28px;letter-spacing:.5px;text-transform:uppercase}
+.input{width:100%;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;font-size:14px;font-family:var(--font);color:var(--text);outline:none;transition:all .2s}
+.input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(187,157,108,.1)}
+.input::placeholder{color:var(--text-dim)}
+#login-error{color:var(--red);font-size:12px;margin-top:10px;display:none;letter-spacing:.3px}
 
 /* ── LAYOUT ── */
 #app{display:flex;flex-direction:column;height:100vh}
 .hidden{display:none!important}
 
 /* ── HEADER ── */
-header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:10}
-.hbrand{display:flex;align-items:center;gap:10px}
-.hbrand .logo{font-size:22px}
-.hbrand h1{font-size:16px;font-weight:700}
-.hbrand .sep{opacity:.35;margin:0 4px}
-.hbrand small{font-size:13px;opacity:.65}
+header{background:var(--surface);border-bottom:1px solid var(--border-gold);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.hbrand{display:flex;align-items:center;gap:12px}
+.hbrand-logo{font-family:'Dancing Script',cursive;font-size:22px;color:var(--gold)}
+.hbrand-sep{width:1px;height:18px;background:var(--border-gold)}
+.hbrand-name{font-size:12px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;font-weight:500}
 .hactions{display:flex;align-items:center;gap:2px}
 
 /* ── ALERT BANNER ── */
-#alert-banner{background:var(--amber);color:#78350f;padding:9px 20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0;transition:background .2s}
-#alert-banner:hover{background:#fbbf24}
+#alert-banner{background:rgba(187,157,108,.12);border-bottom:1px solid var(--border-gold);padding:8px 20px;font-size:12px;font-weight:600;color:var(--gold);display:flex;align-items:center;gap:8px;cursor:pointer;letter-spacing:.5px;transition:background .2s}
+#alert-banner:hover{background:rgba(187,157,108,.18)}
 
-/* ── MAIN SPLIT ── */
+/* ── MAIN ── */
 .main{display:flex;flex:1;overflow:hidden}
 
 /* ── SIDEBAR ── */
-.sidebar{width:300px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar{width:290px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
 .sb-header{padding:14px 14px 10px;border-bottom:1px solid var(--border)}
-.sb-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
-.tabs{display:flex;gap:4px}
-.tab{padding:5px 10px;border-radius:6px;border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .15s;white-space:nowrap}
-.tab.active{background:var(--primary);color:#fff}
-.tab .badge{font-size:11px;padding:1px 5px;border-radius:9px;margin-left:3px;background:rgba(255,255,255,.25)}
-.tab:not(.active) .badge{background:var(--border);color:var(--text)}
+.sb-title{font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
+.tabs{display:flex;gap:3px}
+.tab{padding:5px 10px;border-radius:6px;border:none;background:transparent;cursor:pointer;font-size:11px;font-weight:600;font-family:var(--font);color:var(--text-muted);transition:all .2s;letter-spacing:.3px}
+.tab.active{background:var(--gold-dim);color:var(--gold);border:1px solid var(--border-gold)}
+.tab .badge{font-size:10px;padding:1px 5px;border-radius:8px;margin-left:3px;background:rgba(255,255,255,.07);color:var(--text-muted)}
+.tab.active .badge{background:rgba(187,157,108,.2);color:var(--gold)}
 #sessions-list{flex:1;overflow-y:auto;padding:6px}
 
-/* ── SESSION CARD ── */
-.scard{border-radius:var(--radius);padding:12px;cursor:pointer;margin-bottom:3px;border:1.5px solid transparent;transition:all .15s}
-.scard:hover{background:var(--bg)}
-.scard.active{border-color:var(--primary);background:#f8fafc}
-.scard.s-needs_confirmation{background:var(--amber-bg);border-color:var(--amber-border)}
-.scard.s-needs_confirmation:hover{background:#fef9c3}
-.scard.s-admin_mode{background:var(--orange-bg);border-color:#fed7aa}
+/* ── SESSION CARDS ── */
+.scard{border-radius:var(--radius);padding:12px;cursor:pointer;margin-bottom:3px;border:1px solid transparent;transition:all .2s}
+.scard:hover{background:var(--surface-2);border-color:var(--border)}
+.scard.active{background:var(--gold-dim);border-color:var(--border-gold)}
+.scard.s-needs_confirmation{background:rgba(187,157,108,.08);border-color:var(--border-gold)}
+.scard.s-needs_confirmation:hover{background:rgba(187,157,108,.14)}
+.scard.s-admin_mode{background:var(--orange-bg);border-color:rgba(251,146,60,.25)}
 .scard-row{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:3px}
-.scard-name{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
-.scard-time{font-size:11px;color:var(--muted);flex-shrink:0}
-.scard-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.pill{font-size:11px;font-weight:600;padding:2px 7px;border-radius:9px;white-space:nowrap}
-.pill-pending{background:var(--amber);color:#78350f}
-.pill-admin{background:var(--orange);color:#fff}
-.pill-active{background:var(--green-bg);color:#065f46;border:1px solid #a7f3d0}
-.pill-closed{background:var(--bg);color:var(--muted)}
-.unread-dot{background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:2px 6px;border-radius:9px}
-.empty-state{text-align:center;padding:40px 16px;color:var(--muted);font-size:14px}
+.scard-name{font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;color:var(--text)}
+.scard-time{font-size:11px;color:var(--text-dim);flex-shrink:0}
+.scard-preview{font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.pill{font-size:11px;font-weight:600;padding:2px 8px;border-radius:8px;letter-spacing:.3px}
+.pill-pending{background:rgba(187,157,108,.15);color:var(--gold);border:1px solid var(--border-gold)}
+.pill-admin{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(251,146,60,.25)}
+.pill-active{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.pill-closed{background:rgba(255,255,255,.04);color:var(--text-dim)}
+.unread-dot{background:var(--gold);color:#0a0a0a;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px}
+.empty-state{text-align:center;padding:40px 16px;color:var(--text-dim);font-size:13px}
 
 /* ── CHAT PANEL ── */
 .chat-panel{flex:1;display:flex;overflow:hidden}
-.placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);gap:8px}
-.placeholder-icon{font-size:52px;opacity:.4}
+.placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-dim);gap:10px}
+.placeholder-brand{font-family:'Dancing Script',cursive;font-size:32px;color:var(--gold);opacity:.3}
+.placeholder-sub{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;opacity:.4}
 
 /* ── CHAT VIEW ── */
 #chat-view{flex:1;display:flex;flex-direction:column;overflow:hidden}
 
 /* ── CHAT HEADER ── */
 .chat-header{padding:12px 20px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
-.chat-client h3{font-size:16px;font-weight:700;margin-bottom:2px}
-.chat-client p{font-size:13px;color:var(--muted)}
+.chat-client h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:2px}
+.chat-client p{font-size:12px;color:var(--text-muted)}
 .chat-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
 
 /* ── RESERVATION CARD ── */
-#res-card{background:var(--amber-bg);border:1.5px solid var(--amber-border);border-radius:var(--radius);margin:12px 20px;padding:16px;flex-shrink:0}
-#res-card h4{font-size:12px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-bottom:14px}
-.res-field .flabel{font-size:11px;color:var(--muted);margin-bottom:1px}
-.res-field .fvalue{font-size:14px;font-weight:600}
+#res-card{background:rgba(187,157,108,.07);border:1px solid var(--border-gold);border-radius:var(--radius);margin:12px 20px;padding:16px;flex-shrink:0}
+#res-card h4{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin-bottom:14px}
+.res-field .flabel{font-size:10px;color:var(--text-dim);margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+.res-field .fvalue{font-size:14px;font-weight:600;color:var(--text)}
 .res-btns{display:flex;gap:8px}
 .res-btns .btn{flex:1}
 
 /* ── MESSAGES ── */
-#messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:76%}
+#messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.msg{max-width:74%}
 .msg-user{align-self:flex-end}
 .msg-assistant,.msg-admin{align-self:flex-start}
-.bubble{padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
-.msg-user .bubble{background:var(--primary);color:#fff;border-bottom-right-radius:4px}
-.msg-assistant .bubble{background:var(--surface);border:1px solid var(--border);border-bottom-left-radius:4px}
-.msg-admin .bubble{background:var(--blue-bg);border:1px solid #bfdbfe;border-bottom-left-radius:4px}
-.msg-label{font-size:11px;font-weight:700;margin-bottom:2px;padding:0 2px}
-.msg-assistant .msg-label{color:var(--primary)}
+.bubble{padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.msg-user .bubble{background:var(--gold-dim);border:1px solid var(--border-gold);border-bottom-right-radius:4px;color:var(--text)}
+.msg-assistant .bubble{background:var(--surface-2);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--text)}
+.msg-admin .bubble{background:var(--blue-bg);border:1px solid var(--blue-border);border-bottom-left-radius:4px;color:var(--text)}
+.msg-label{font-size:10px;font-weight:700;margin-bottom:3px;padding:0 2px;text-transform:uppercase;letter-spacing:.5px}
+.msg-assistant .msg-label{color:var(--gold)}
 .msg-admin .msg-label{color:var(--blue)}
-.msg-time{font-size:11px;color:var(--muted);margin-top:3px;padding:0 2px}
+.msg-time{font-size:11px;color:var(--text-dim);margin-top:4px;padding:0 2px}
 .msg-user .msg-time{text-align:right}
 
 /* ── ADMIN INPUT ── */
 #admin-bar{padding:12px 20px;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
-#admin-bar textarea{flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 12px;font-size:14px;font-family:inherit;resize:none;outline:none;max-height:110px;transition:border-color .2s}
-#admin-bar textarea:focus{border-color:var(--primary)}
+#admin-bar textarea{flex:1;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:14px;font-family:var(--font);color:var(--text);resize:none;outline:none;max-height:110px;transition:border-color .2s}
+#admin-bar textarea:focus{border-color:var(--gold)}
+#admin-bar textarea::placeholder{color:var(--text-dim)}
 
 /* ── MODALS ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px}
-.modal{background:var(--surface);border-radius:14px;width:100%;max-width:480px;box-shadow:0 24px 48px rgba(0,0,0,.2);overflow:hidden}
-.modal-header{padding:20px 24px 0}
-.modal-header h3{font-size:18px;font-weight:800}
-.modal-header p{color:var(--muted);font-size:14px;margin-top:4px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px;backdrop-filter:blur(4px)}
+.modal{background:var(--surface);border:1px solid var(--border-gold);border-radius:16px;width:100%;max-width:480px;box-shadow:var(--gold-glow),0 32px 64px rgba(0,0,0,.6);overflow:hidden}
+.modal-header{padding:22px 24px 0}
+.modal-header h3{font-size:17px;font-weight:700;color:var(--text)}
+.modal-header p{color:var(--text-muted);font-size:13px;margin-top:4px}
 .modal-body{padding:20px 24px}
-.modal-footer{padding:0 24px 20px;display:flex;gap:8px;justify-content:flex-end}
+.modal-footer{padding:0 24px 22px;display:flex;gap:8px;justify-content:flex-end}
 .mfield{margin-bottom:14px}
-.mfield label{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
-.mfield textarea{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:14px;font-family:inherit;resize:vertical;min-height:100px;outline:none;transition:border-color .2s}
-.mfield textarea:focus{border-color:var(--primary)}
-.res-summary{background:var(--bg);border-radius:var(--radius);padding:12px 14px;font-size:14px;line-height:1.8;margin-bottom:14px;white-space:pre-wrap}
-.warn-box{background:var(--red-bg);border:1px solid #fecaca;border-radius:var(--radius);padding:11px 14px;font-size:13px;color:#991b1b;margin-bottom:14px;display:flex;gap:8px}
+.mfield label{display:block;font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.mfield textarea{width:100%;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:14px;font-family:var(--font);color:var(--text);resize:vertical;min-height:100px;outline:none;transition:border-color .2s}
+.mfield textarea:focus{border-color:var(--gold)}
+.mfield textarea::placeholder{color:var(--text-dim)}
+.res-summary{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:13px;line-height:1.9;color:var(--text-muted);margin-bottom:14px;white-space:pre-wrap}
+.warn-box{background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:var(--red);margin-bottom:14px;display:flex;gap:8px;letter-spacing:.2px}
 
 /* ── ANALYTICS ── */
-#analytics{flex:1;overflow-y:auto;padding:24px;display:none}
+#analytics{flex:1;overflow-y:auto;padding:28px;display:none;background:var(--bg)}
 #analytics.show{display:block}
-.analytics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:20px}
-.stat-card{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
-.stat-card h3{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
-.stat-big{font-size:38px;font-weight:800;line-height:1}
-.stat-sub{font-size:13px;color:var(--muted);margin-top:4px}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.bar-label{font-size:12px;color:var(--muted);width:80px;text-align:right;flex-shrink:0}
-.bar-track{flex:1;background:var(--bg);border-radius:4px;height:8px;overflow:hidden}
-.bar-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .5s ease}
-.bar-count{font-size:12px;font-weight:700;min-width:22px;text-align:right}
-.status-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.status-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+#analytics h2{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
+#analytics > p{color:var(--text-muted);font-size:13px;margin-bottom:24px}
+.analytics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+.stat-card h3{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}
+.stat-big{font-size:42px;font-weight:700;color:var(--gold);line-height:1}
+.stat-sub{font-size:12px;color:var(--text-muted);margin-top:6px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-label{font-size:12px;color:var(--text-muted);width:85px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;background:var(--surface-2);border-radius:4px;height:6px;overflow:hidden}
+.bar-fill{height:100%;background:var(--gold);border-radius:4px;transition:width .6s ease}
+.bar-count{font-size:12px;font-weight:700;color:var(--gold);min-width:24px;text-align:right}
+.status-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px;color:var(--text-muted)}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px}
 
 /* ── TEST CHAT ── */
 #test-view{flex:1;display:flex;flex-direction:column;overflow:hidden;display:none}
 #test-view.show{display:flex}
-.test-header{background:#075e54;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.test-header{background:var(--surface);border-bottom:1px solid var(--border-gold);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .test-header-info{display:flex;align-items:center;gap:12px}
-.test-avatar{width:38px;height:38px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.test-header h3{font-size:15px;font-weight:700;margin-bottom:1px}
-.test-header p{font-size:12px;opacity:.8}
-.test-header-actions{display:flex;gap:4px}
-#test-messages{flex:1;overflow-y:auto;padding:16px 20px;background:#e5ddd5;display:flex;flex-direction:column;gap:8px}
+.test-avatar{width:38px;height:38px;border-radius:50%;background:var(--gold-dim);border:1.5px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-family:'Dancing Script',cursive;font-size:18px;color:var(--gold);flex-shrink:0}
+.test-header h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:1px}
+.test-header p{font-size:11px;color:var(--text-muted);letter-spacing:.5px}
+#test-messages{flex:1;overflow-y:auto;padding:20px;background:var(--bg);display:flex;flex-direction:column;gap:10px}
 .tmsg{max-width:72%;word-break:break-word}
 .tmsg-user{align-self:flex-end}
 .tmsg-agent{align-self:flex-start}
-.tbubble{padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.5;white-space:pre-wrap;position:relative}
-.tmsg-user .tbubble{background:#dcf8c6;border-bottom-right-radius:3px}
-.tmsg-agent .tbubble{background:#fff;border-bottom-left-radius:3px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
-.tmsg-agent-label{font-size:11px;font-weight:700;color:#075e54;margin-bottom:2px;padding:0 2px}
-.ttime{font-size:11px;color:rgba(0,0,0,.4);margin-top:3px;padding:0 2px;text-align:right}
-.tmsg-agent .ttime{text-align:left}
-.ttyping{align-self:flex-start;background:#fff;border-radius:12px;border-bottom-left-radius:3px;padding:10px 14px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
-.tdots span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#94a3b8;margin:0 2px;animation:tdot 1.2s infinite}
+.tbubble{padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.6;white-space:pre-wrap}
+.tmsg-user .tbubble{background:var(--gold-dim);border:1px solid var(--border-gold);color:var(--text);border-bottom-right-radius:4px}
+.tmsg-agent .tbubble{background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
+.tmsg-agent-label{font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;padding:0 2px}
+.ttime{font-size:11px;color:var(--text-dim);margin-top:4px;padding:0 2px}
+.tmsg-user .ttime{text-align:right}
+.ttyping{align-self:flex-start;background:var(--surface-2);border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:4px;padding:12px 16px}
+.tdots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin:0 2px;animation:tdot 1.2s infinite}
 .tdots span:nth-child(2){animation-delay:.2s}
 .tdots span:nth-child(3){animation-delay:.4s}
-@keyframes tdot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-.test-input-bar{background:#f0f0f0;padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0}
-#test-input{flex:1;border:none;border-radius:20px;padding:10px 16px;font-size:14px;font-family:inherit;outline:none;background:#fff;resize:none;max-height:100px}
-.test-send{width:42px;height:42px;border-radius:50%;border:none;background:#25d366;color:#fff;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
-.test-send:hover{background:#1ebe5d}
-.test-send:disabled{background:#94a3b8;cursor:not-allowed}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+.test-input-bar{background:var(--surface);border-top:1px solid var(--border-gold);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+#test-input{flex:1;background:var(--surface-2);border:1.5px solid var(--border);border-radius:10px;padding:10px 16px;font-size:14px;font-family:var(--font);color:var(--text);outline:none;resize:none;max-height:100px;transition:border-color .2s}
+#test-input:focus{border-color:var(--gold)}
+#test-input::placeholder{color:var(--text-dim)}
+.test-send{width:40px;height:40px;border-radius:10px;border:none;background:var(--gold);color:#0a0a0a;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-weight:700}
+.test-send:hover{background:var(--gold-light);box-shadow:var(--gold-glow)}
+.test-send:disabled{background:var(--text-dim);cursor:not-allowed;box-shadow:none}
 </style>
 </head>
 <body>
@@ -215,11 +242,12 @@ header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:f
 <!-- LOGIN -->
 <div id="login">
   <div class="login-card">
-    <div class="login-emoji">🎵</div>
-    <h1>Gregory CRM</h1>
-    <p class="sub">Feeling Vilanova Grand Marina</p>
-    <input type="password" id="login-key" class="input" placeholder="Clave de acceso CRM" />
-    <button class="btn btn-primary" onclick="login()">Entrar</button>
+    <div class="login-brand">Feeling Vilanova</div>
+    <h1>Panel de Administración</h1>
+    <div class="login-divider"></div>
+    <p>Agente Gregory · CRM</p>
+    <input type="password" id="login-key" class="input" placeholder="Clave de acceso" />
+    <button class="btn btn-gold" style="width:100%;margin-top:12px;padding:12px;font-size:14px" onclick="login()">Entrar</button>
     <p id="login-error">Clave incorrecta. Inténtalo de nuevo.</p>
   </div>
 </div>
@@ -227,13 +255,11 @@ header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:f
 <!-- APP -->
 <div id="app" class="hidden">
 
-  <!-- Header -->
   <header>
     <div class="hbrand">
-      <span class="logo">🎵</span>
-      <h1>Gregory CRM</h1>
-      <span class="sep">·</span>
-      <small>Feeling Vilanova Grand Marina</small>
+      <span class="hbrand-logo">Feeling</span>
+      <div class="hbrand-sep"></div>
+      <span class="hbrand-name">Gregory CRM</span>
     </div>
     <div class="hactions">
       <button class="btn-icon" title="Actualizar" onclick="refresh()">⟳</button>
@@ -243,14 +269,12 @@ header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:f
     </div>
   </header>
 
-  <!-- Alert banner -->
   <div id="alert-banner" class="hidden" onclick="filterTab('needs_confirmation')">
-    <span>⚠️</span>
+    <span>◆</span>
     <span id="alert-text"></span>
-    <span style="margin-left:auto;opacity:.7;font-size:12px">Ver pendientes →</span>
+    <span style="margin-left:auto;opacity:.6;font-size:11px;letter-spacing:.5px">VER PENDIENTES →</span>
   </div>
 
-  <!-- Main -->
   <div class="main">
 
     <!-- Sidebar -->
@@ -266,18 +290,15 @@ header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:f
       <div id="sessions-list"></div>
     </div>
 
-    <!-- Right panel: chat or analytics -->
+    <!-- Right panel -->
     <div class="chat-panel">
 
-      <!-- Placeholder -->
       <div id="placeholder" class="placeholder">
-        <div class="placeholder-icon">💬</div>
-        <p>Selecciona una conversación</p>
+        <div class="placeholder-brand">Feeling Vilanova</div>
+        <div class="placeholder-sub">Selecciona una conversación</div>
       </div>
 
-      <!-- Chat view -->
       <div id="chat-view" class="hidden">
-        <!-- Chat header -->
         <div class="chat-header">
           <div class="chat-client">
             <h3 id="ch-name">—</h3>
@@ -290,9 +311,8 @@ header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:f
           </div>
         </div>
 
-        <!-- Reservation alert card -->
         <div id="res-card" class="hidden">
-          <h4>📋 Reserva pendiente de confirmación</h4>
+          <h4>◆ Reserva pendiente de confirmación</h4>
           <div class="res-grid" id="res-details"></div>
           <div class="res-btns">
             <button class="btn btn-success" onclick="openConfirm()">✓ Confirmar reserva</button>
@@ -300,20 +320,18 @@ header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:f
           </div>
         </div>
 
-        <!-- Messages -->
         <div id="messages"></div>
 
-        <!-- Admin input bar -->
         <div id="admin-bar" class="hidden">
-          <textarea id="admin-input" placeholder="Escribe como administrador..." rows="2" onkeydown="msgKeydown(event)"></textarea>
-          <button class="btn btn-primary" onclick="sendAdmin()">Enviar</button>
+          <textarea id="admin-input" placeholder="Escribe como administrador..." rows="2" onkeydown="msgKeydown(event)" oninput="autoResize(this)"></textarea>
+          <button class="btn btn-gold btn-sm" onclick="sendAdmin()">Enviar</button>
         </div>
       </div>
 
       <!-- Analytics -->
       <div id="analytics">
-        <h2 style="font-size:20px;font-weight:800;margin-bottom:4px">Analytics</h2>
-        <p style="color:var(--muted);font-size:14px">Preguntas frecuentes y estadísticas de reservas</p>
+        <h2>Analytics</h2>
+        <p>Preguntas frecuentes y estadísticas de reservas</p>
         <div class="analytics-grid">
           <div class="stat-card">
             <h3>Preguntas más frecuentes</h3>
@@ -340,26 +358,24 @@ header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:f
       <div id="test-view">
         <div class="test-header">
           <div class="test-header-info">
-            <div class="test-avatar">🤖</div>
+            <div class="test-avatar">G</div>
             <div>
-              <h3>Gregory — Feeling Vilanova</h3>
-              <p>Agente de prueba · sin WhatsApp</p>
+              <h3>Gregory — Agente de prueba</h3>
+              <p>Feeling Vilanova Grand Marina · sin WhatsApp</p>
             </div>
           </div>
-          <div class="test-header-actions">
-            <button class="btn-icon" title="Limpiar conversación" onclick="clearTest()" style="color:rgba(255,255,255,.7)">🗑️</button>
-          </div>
+          <button class="btn-icon" title="Limpiar conversación" onclick="clearTest()">🗑️</button>
         </div>
         <div id="test-messages"></div>
         <div class="test-input-bar">
-          <textarea id="test-input" placeholder="Escribe un mensaje..." rows="1" onkeydown="testKeydown(event)" oninput="autoResize(this)"></textarea>
+          <textarea id="test-input" placeholder="Escribe un mensaje para probar a Gregory..." rows="1" onkeydown="testKeydown(event)" oninput="autoResize(this)"></textarea>
           <button class="test-send" id="test-send-btn" onclick="sendTest()">➤</button>
         </div>
       </div>
 
-    </div><!-- /chat-panel -->
-  </div><!-- /main -->
-</div><!-- /app -->
+    </div>
+  </div>
+</div>
 
 <!-- CONFIRM MODAL -->
 <div id="m-confirm" class="overlay hidden">
@@ -390,7 +406,7 @@ header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:f
       <p id="mca-sub">Esta acción no se puede deshacer</p>
     </div>
     <div class="modal-body">
-      <div class="warn-box">⚠️ La reserva se eliminará de la base de datos y se enviará una notificación al cliente.</div>
+      <div class="warn-box">⚠ La reserva se eliminará de la base de datos y se enviará una notificación al cliente.</div>
       <div class="res-summary" id="mca-summary"></div>
       <div class="mfield">
         <label>Mensaje WhatsApp al cliente</label>
@@ -405,463 +421,275 @@ header{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:f
 </div>
 
 <script>
-// ─── State ────────────────────────────────────────────────────────────────────
-let token = '';
-let sessions = [];
-let currentPhone = null;
-let currentReservation = null;
-let currentFilter = 'all';
-let showAnalytics = false;
-let refreshTimer = null;
+let token='',sessions=[],currentPhone=null,currentReservation=null,currentFilter='all',showAnalytics=false,showTest=false,refreshTimer=null;
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
-async function login() {
-  const key = document.getElementById('login-key').value.trim();
-  if (!key) return;
-  const r = await fetch('/crm/sessions?limit=1', { headers: { Authorization: `Bearer ${key}` } });
-  if (r.ok) {
-    token = key;
-    sessionStorage.setItem('crm_token', key);
-    show('app'); hide('login');
-    init();
-  } else {
-    show('login-error');
-  }
+// ── Auth ──────────────────────────────────────────────────────────────────────
+async function login(){
+  const key=document.getElementById('login-key').value.trim();if(!key)return;
+  const r=await fetch('/crm/sessions?limit=1',{headers:{Authorization:`Bearer ${key}`}});
+  if(r.ok){token=key;sessionStorage.setItem('crm_token',key);hide('login');show('app');init();}
+  else show('login-error');
 }
-function logout() { sessionStorage.removeItem('crm_token'); clearInterval(refreshTimer); location.reload(); }
-document.getElementById('login-key').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+function logout(){sessionStorage.removeItem('crm_token');clearInterval(refreshTimer);location.reload();}
+document.getElementById('login-key').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
-async function init() {
-  await loadSessions();
-  refreshTimer = setInterval(refresh, 30000);
-}
-async function refresh() {
-  await loadSessions();
-  if (currentPhone) await loadSession(currentPhone, false);
-}
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init(){await loadSessions();refreshTimer=setInterval(refresh,30000);}
+async function refresh(){await loadSessions();if(currentPhone)await loadSession(currentPhone,false);}
 
-// ─── API ──────────────────────────────────────────────────────────────────────
-async function api(url, opts = {}) {
-  const r = await fetch(url, {
-    ...opts,
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', ...opts.headers }
-  });
-  if (r.status === 401) { logout(); return null; }
+// ── API ───────────────────────────────────────────────────────────────────────
+async function api(url,opts={}){
+  const r=await fetch(url,{...opts,headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json',...opts.headers}});
+  if(r.status===401){logout();return null;}
   return r.json();
 }
 
-// ─── Sessions ─────────────────────────────────────────────────────────────────
-async function loadSessions() {
-  const data = await api('/crm/sessions?limit=200');
-  if (!data) return;
-  sessions = data;
-  renderSessions();
-  updateBadges();
-  updateBanner();
+// ── Sessions ──────────────────────────────────────────────────────────────────
+async function loadSessions(){
+  const data=await api('/crm/sessions?limit=200');if(!data)return;
+  sessions=data;renderSessions();updateBadges();updateBanner();
 }
-
-function filterTab(filter, btn) {
-  currentFilter = filter;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  else document.querySelector(`[data-f="${filter}"]`)?.classList.add('active');
+function filterTab(filter,btn){
+  currentFilter=filter;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  (btn||document.querySelector(`[data-f="${filter}"]`))?.classList.add('active');
   renderSessions();
 }
-
-function renderSessions() {
-  const el = document.getElementById('sessions-list');
-  let list = sessions;
-  if (currentFilter !== 'all') list = sessions.filter(s => s.status === currentFilter);
-
-  list = [...list].sort((a, b) => {
-    const o = { needs_confirmation: 0, admin_mode: 1, active: 2, closed: 3 };
-    const d = (o[a.status] ?? 2) - (o[b.status] ?? 2);
-    return d !== 0 ? d : new Date(b.last_message) - new Date(a.last_message);
+function renderSessions(){
+  const el=document.getElementById('sessions-list');
+  let list=sessions;
+  if(currentFilter!=='all')list=sessions.filter(s=>s.status===currentFilter);
+  list=[...list].sort((a,b)=>{
+    const o={needs_confirmation:0,admin_mode:1,active:2,closed:3};
+    const d=(o[a.status]??2)-(o[b.status]??2);
+    return d!==0?d:new Date(b.last_message)-new Date(a.last_message);
   });
-
-  if (!list.length) { el.innerHTML = '<div class="empty-state">Sin conversaciones</div>'; return; }
-
-  el.innerHTML = list.map(s => {
-    const name = esc(s.client_name || s.phone_number);
-    const time = fmtTime(s.last_message);
-    const isActive = s.phone_number === currentPhone;
-    return `
-      <div class="scard s-${s.status}${isActive ? ' active' : ''}" onclick="loadSession('${s.phone_number}')">
-        <div class="scard-row">
-          <span class="scard-name">${name}</span>
-          <span class="scard-time">${time}</span>
-        </div>
-        <div class="scard-row" style="margin-top:4px">
-          ${pillHtml(s.status)}
-          ${s.unread_count > 0 ? `<span class="unread-dot">${s.unread_count} nuevo${s.unread_count > 1 ? 's' : ''}</span>` : ''}
-        </div>
-      </div>`;
+  if(!list.length){el.innerHTML='<div class="empty-state">Sin conversaciones</div>';return;}
+  el.innerHTML=list.map(s=>{
+    const name=esc(s.client_name||s.phone_number);
+    const isActive=s.phone_number===currentPhone;
+    return `<div class="scard s-${s.status}${isActive?' active':''}" onclick="loadSession('${s.phone_number}')">
+      <div class="scard-row"><span class="scard-name">${name}</span><span class="scard-time">${fmtTime(s.last_message)}</span></div>
+      <div class="scard-row" style="margin-top:4px">
+        ${pillHtml(s.status)}
+        ${s.unread_count>0?`<span class="unread-dot">${s.unread_count}</span>`:''}
+      </div>
+    </div>`;
   }).join('');
 }
-
-function updateBadges() {
-  document.getElementById('b-pending').textContent = sessions.filter(s => s.status === 'needs_confirmation').length;
-  document.getElementById('b-admin').textContent   = sessions.filter(s => s.status === 'admin_mode').length;
+function updateBadges(){
+  document.getElementById('b-pending').textContent=sessions.filter(s=>s.status==='needs_confirmation').length;
+  document.getElementById('b-admin').textContent=sessions.filter(s=>s.status==='admin_mode').length;
+}
+function updateBanner(){
+  const n=sessions.filter(s=>s.status==='needs_confirmation').length;
+  const b=document.getElementById('alert-banner');
+  if(n>0){b.classList.remove('hidden');document.getElementById('alert-text').textContent=`${n} reserva${n>1?'s':''} pendiente${n>1?'s':''} de confirmación`;}
+  else b.classList.add('hidden');
 }
 
-function updateBanner() {
-  const n = sessions.filter(s => s.status === 'needs_confirmation').length;
-  const banner = document.getElementById('alert-banner');
-  if (n > 0) {
-    banner.classList.remove('hidden');
-    document.getElementById('alert-text').textContent =
-      `${n} reserva${n > 1 ? 's' : ''} pendiente${n > 1 ? 's' : ''} de confirmación`;
-  } else {
-    banner.classList.add('hidden');
-  }
-}
-
-// ─── Session Detail ────────────────────────────────────────────────────────────
-async function loadSession(phone, scrollBottom = true) {
-  currentPhone = phone;
-  renderSessions();
-
-  const data = await api(`/crm/session/${phone}`);
-  if (!data) return;
-
-  const s = data.session || {};
-  const isAdmin = s.status === 'admin_mode';
-
-  // Header
-  document.getElementById('ch-name').textContent  = s.client_name || phone;
-  document.getElementById('ch-phone').textContent = phone;
-  document.getElementById('ch-pill').outerHTML = `<span id="ch-pill" class="pill">${pillInner(s.status)}</span>`;
-  // Buttons
-  document.getElementById('btn-intervene').classList.toggle('hidden', isAdmin);
-  document.getElementById('btn-release').classList.toggle('hidden', !isAdmin);
-  document.getElementById('admin-bar').classList.toggle('hidden', !isAdmin);
-
-  // Reservation card
-  const pend = (data.reservations || []).find(r => r.status === 'pending_confirmation');
-  currentReservation = pend || null;
+// ── Session detail ─────────────────────────────────────────────────────────────
+async function loadSession(phone,scrollBottom=true){
+  currentPhone=phone;renderSessions();
+  const data=await api(`/crm/session/${phone}`);if(!data)return;
+  const s=data.session||{};
+  const isAdmin=s.status==='admin_mode';
+  document.getElementById('ch-name').textContent=s.client_name||phone;
+  document.getElementById('ch-phone').textContent=phone;
+  document.getElementById('ch-pill').outerHTML=`<span id="ch-pill" class="pill">${pillInner(s.status)}</span>`;
+  document.getElementById('btn-intervene').classList.toggle('hidden',isAdmin);
+  document.getElementById('btn-release').classList.toggle('hidden',!isAdmin);
+  document.getElementById('admin-bar').classList.toggle('hidden',!isAdmin);
+  const pend=(data.reservations||[]).find(r=>r.status==='pending_confirmation');
+  currentReservation=pend||null;
   renderResCard(pend);
-
-  // Messages
-  renderMessages(data.history || []);
-
-  // Show chat
-  hide('placeholder'); hide('analytics');
+  renderMessages(data.history||[]);
+  hide('placeholder');hide('analytics');
   document.getElementById('test-view').classList.remove('show');
-  showEl('chat-view'); showAnalytics = false; showTest = false;
-  document.getElementById('btn-analytics').style.opacity = '1';
-  document.getElementById('btn-test').style.opacity = '1';
-
-  if (scrollBottom) {
-    const m = document.getElementById('messages');
-    setTimeout(() => { m.scrollTop = m.scrollHeight; }, 50);
-  }
+  showEl('chat-view');showAnalytics=false;showTest=false;
+  document.getElementById('btn-analytics').style.opacity='1';
+  document.getElementById('btn-test').style.opacity='1';
+  if(scrollBottom){const m=document.getElementById('messages');setTimeout(()=>{m.scrollTop=m.scrollHeight;},50);}
 }
-
-function renderResCard(res) {
-  const card = document.getElementById('res-card');
-  if (!res) { card.classList.add('hidden'); return; }
+function renderResCard(res){
+  const card=document.getElementById('res-card');
+  if(!res){card.classList.add('hidden');return;}
   card.classList.remove('hidden');
-  document.getElementById('res-details').innerHTML = `
-    <div class="res-field"><div class="flabel">Fecha</div><div class="fvalue">📅 ${fmtDate(res.date)}</div></div>
-    <div class="res-field"><div class="flabel">Hora</div><div class="fvalue">🕐 ${(res.time||'').substring(0,5)}</div></div>
-    <div class="res-field"><div class="flabel">Comensales</div><div class="fvalue">👥 ${res.num_guests} persona${res.num_guests>1?'s':''}</div></div>
-    <div class="res-field"><div class="flabel">Servicio</div><div class="fvalue">🍽️ ${esc(res.service)}</div></div>
-    ${res.notes ? `<div class="res-field" style="grid-column:1/-1"><div class="flabel">Notas</div><div class="fvalue">📝 ${esc(res.notes)}</div></div>` : ''}
-  `;
+  document.getElementById('res-details').innerHTML=`
+    <div class="res-field"><div class="flabel">Fecha</div><div class="fvalue">${fmtDate(res.date)}</div></div>
+    <div class="res-field"><div class="flabel">Hora</div><div class="fvalue">${(res.time||'').substring(0,5)}</div></div>
+    <div class="res-field"><div class="flabel">Comensales</div><div class="fvalue">${res.num_guests} persona${res.num_guests>1?'s':''}</div></div>
+    <div class="res-field"><div class="flabel">Servicio</div><div class="fvalue">${esc(res.service)}</div></div>
+    ${res.notes?`<div class="res-field" style="grid-column:1/-1"><div class="flabel">Notas</div><div class="fvalue">${esc(res.notes)}</div></div>`:''}`;
 }
-
-function renderMessages(history) {
-  const el = document.getElementById('messages');
-  if (!history.length) { el.innerHTML = '<div class="empty-state">Sin mensajes</div>'; return; }
-  el.innerHTML = history.map(m => {
-    const label = m.role === 'admin' ? '<div class="msg-label">Administrador</div>'
-                : m.role === 'assistant' ? '<div class="msg-label">Gregory IA</div>' : '';
-    return `
-      <div class="msg msg-${m.role}">
-        ${label}
-        <div class="bubble">${esc(m.content)}</div>
-        <div class="msg-time">${fmtTime(m.created_at)}</div>
-      </div>`;
+function renderMessages(history){
+  const el=document.getElementById('messages');
+  if(!history.length){el.innerHTML='<div class="empty-state">Sin mensajes</div>';return;}
+  el.innerHTML=history.map(m=>{
+    const label=m.role==='admin'?'<div class="msg-label">Administrador</div>':m.role==='assistant'?'<div class="msg-label">Gregory</div>':'';
+    return `<div class="msg msg-${m.role}">${label}<div class="bubble">${esc(m.content)}</div><div class="msg-time">${fmtTime(m.created_at)}</div></div>`;
   }).join('');
 }
 
-// ─── Intervene / Release ──────────────────────────────────────────────────────
-async function intervene() {
-  await api(`/crm/session/${currentPhone}/intervene`, { method: 'POST' });
-  await loadSession(currentPhone);
-  await loadSessions();
-}
-async function release() {
-  await api(`/crm/session/${currentPhone}/release`, { method: 'POST' });
-  await loadSession(currentPhone);
-  await loadSessions();
-}
+// ── Intervene / Release ───────────────────────────────────────────────────────
+async function intervene(){await api(`/crm/session/${currentPhone}/intervene`,{method:'POST'});await loadSession(currentPhone);await loadSessions();}
+async function release(){await api(`/crm/session/${currentPhone}/release`,{method:'POST'});await loadSession(currentPhone);await loadSessions();}
 
-// ─── Admin message ────────────────────────────────────────────────────────────
-async function sendAdmin() {
-  const input = document.getElementById('admin-input');
-  const msg = input.value.trim();
-  if (!msg || !currentPhone) return;
-  await api('/crm/message', { method: 'POST', body: JSON.stringify({ phone: currentPhone, message: msg }) });
-  input.value = '';
-  await loadSession(currentPhone);
+// ── Admin message ─────────────────────────────────────────────────────────────
+async function sendAdmin(){
+  const input=document.getElementById('admin-input');const msg=input.value.trim();
+  if(!msg||!currentPhone)return;
+  await api('/crm/message',{method:'POST',body:JSON.stringify({phone:currentPhone,message:msg})});
+  input.value='';input.style.height='auto';await loadSession(currentPhone);
 }
-function msgKeydown(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAdmin(); } }
+function msgKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAdmin();}}
 
-// ─── Confirm modal ────────────────────────────────────────────────────────────
-function openConfirm() {
-  if (!currentReservation) return;
-  const r = currentReservation;
-  document.getElementById('mc-sub').textContent = `Reserva de ${r.client_name}`;
-  document.getElementById('mc-summary').textContent =
-    `📅 ${fmtDate(r.date)}  ·  🕐 ${(r.time||'').substring(0,5)}  ·  👥 ${r.num_guests} persona${r.num_guests>1?'s':''}  ·  🍽️ ${r.service}${r.notes ? '\n📝 ' + r.notes : ''}`;
-  document.getElementById('mc-msg').value =
-    `✅ ¡Hola ${r.client_name}! Tu reserva en Feeling Vilanova está confirmada 🎉\n\n📅 ${fmtDate(r.date)} a las ${(r.time||'').substring(0,5)}\n👥 ${r.num_guests} persona${r.num_guests>1?'s':''}\n🍽️ ${r.service}\n\n¡Te esperamos! 🌊`;
+// ── Confirm modal ─────────────────────────────────────────────────────────────
+function openConfirm(){
+  if(!currentReservation)return;const r=currentReservation;
+  document.getElementById('mc-sub').textContent=`Reserva de ${r.client_name}`;
+  document.getElementById('mc-summary').textContent=`📅 ${fmtDate(r.date)}  ·  🕐 ${(r.time||'').substring(0,5)}  ·  👥 ${r.num_guests} persona${r.num_guests>1?'s':''}  ·  🍽️ ${r.service}${r.notes?'\n📝 '+r.notes:''}`;
+  document.getElementById('mc-msg').value=`✅ ¡Hola ${r.client_name}! Tu reserva en Feeling Vilanova está confirmada 🎉\n\n📅 ${fmtDate(r.date)} a las ${(r.time||'').substring(0,5)}\n👥 ${r.num_guests} persona${r.num_guests>1?'s':''}\n🍽️ ${r.service}\n\n¡Te esperamos! 🌊`;
   show('m-confirm');
 }
-async function doConfirm() {
-  if (!currentReservation) return;
-  const msg = document.getElementById('mc-msg').value.trim();
-  await api(`/crm/reservation/${currentReservation.id}/confirm`, {
-    method: 'PUT', body: JSON.stringify({ custom_message: msg })
-  });
-  closeModals();
-  currentReservation = null;
-  await loadSession(currentPhone);
-  await loadSessions();
+async function doConfirm(){
+  if(!currentReservation)return;
+  await api(`/crm/reservation/${currentReservation.id}/confirm`,{method:'PUT',body:JSON.stringify({custom_message:document.getElementById('mc-msg').value.trim()})});
+  closeModals();currentReservation=null;await loadSession(currentPhone);await loadSessions();
 }
 
-// ─── Cancel modal ─────────────────────────────────────────────────────────────
-function openCancel() {
-  if (!currentReservation) return;
-  const r = currentReservation;
-  document.getElementById('mca-sub').textContent = `Reserva de ${r.client_name}`;
-  document.getElementById('mca-summary').textContent =
-    `📅 ${fmtDate(r.date)}  ·  🕐 ${(r.time||'').substring(0,5)}  ·  👥 ${r.num_guests} persona${r.num_guests>1?'s':''}  ·  🍽️ ${r.service}`;
-  document.getElementById('mca-msg').value =
-    `Hola ${r.client_name}, lamentablemente no hemos podido confirmar tu reserva para el ${fmtDate(r.date)} a las ${(r.time||'').substring(0,5)}.\n\nSi quieres intentarlo en otra fecha, llámanos al 606 16 20 11. ¡Hasta pronto! 🙏`;
+// ── Cancel modal ──────────────────────────────────────────────────────────────
+function openCancel(){
+  if(!currentReservation)return;const r=currentReservation;
+  document.getElementById('mca-sub').textContent=`Reserva de ${r.client_name}`;
+  document.getElementById('mca-summary').textContent=`📅 ${fmtDate(r.date)}  ·  🕐 ${(r.time||'').substring(0,5)}  ·  👥 ${r.num_guests} persona${r.num_guests>1?'s':''}  ·  🍽️ ${r.service}`;
+  document.getElementById('mca-msg').value=`Hola ${r.client_name}, lamentablemente no hemos podido confirmar tu reserva para el ${fmtDate(r.date)} a las ${(r.time||'').substring(0,5)}.\n\nSi quieres intentarlo en otra fecha, llámanos al 606 16 20 11. ¡Hasta pronto! 🙏`;
   show('m-cancel');
 }
-async function doCancel() {
-  if (!currentReservation) return;
-  const msg = document.getElementById('mca-msg').value.trim();
-  await api(`/crm/reservation/${currentReservation.id}/cancel`, {
-    method: 'PUT', body: JSON.stringify({ custom_message: msg })
-  });
-  closeModals();
-  currentReservation = null;
-  await loadSession(currentPhone);
-  await loadSessions();
+async function doCancel(){
+  if(!currentReservation)return;
+  await api(`/crm/reservation/${currentReservation.id}/cancel`,{method:'PUT',body:JSON.stringify({custom_message:document.getElementById('mca-msg').value.trim()})});
+  closeModals();currentReservation=null;await loadSession(currentPhone);await loadSessions();
 }
+function closeModals(){hide('m-confirm');hide('m-cancel');}
+document.getElementById('m-confirm').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModals();});
+document.getElementById('m-cancel').addEventListener('click', e=>{if(e.target===e.currentTarget)closeModals();});
 
-function closeModals() { hide('m-confirm'); hide('m-cancel'); }
-document.getElementById('m-confirm').addEventListener('click', e => { if (e.target === e.currentTarget) closeModals(); });
-document.getElementById('m-cancel').addEventListener('click',  e => { if (e.target === e.currentTarget) closeModals(); });
-
-// ─── Analytics ────────────────────────────────────────────────────────────────
-async function toggleAnalytics() {
-  showAnalytics = !showAnalytics;
-  const aEl = document.getElementById('analytics');
-  if (showAnalytics) {
-    aEl.classList.add('show');
-    hide('placeholder'); hide('chat-view');
+// ── Analytics ─────────────────────────────────────────────────────────────────
+async function toggleAnalytics(){
+  showAnalytics=!showAnalytics;
+  const aEl=document.getElementById('analytics');
+  if(showAnalytics){
+    aEl.classList.add('show');hide('placeholder');hide('chat-view');
     document.getElementById('test-view').classList.remove('show');
-    document.getElementById('btn-analytics').style.opacity = '.5';
-    document.getElementById('btn-test').style.opacity = '1';
-    showTest = false;
-    await loadAnalytics();
+    document.getElementById('btn-analytics').style.opacity='.5';
+    document.getElementById('btn-test').style.opacity='1';
+    showTest=false;await loadAnalytics();
   } else {
-    aEl.classList.remove('show');
-    document.getElementById('btn-analytics').style.opacity = '1';
-    if (currentPhone) showEl('chat-view'); else showEl('placeholder');
+    aEl.classList.remove('show');document.getElementById('btn-analytics').style.opacity='1';
+    if(currentPhone)showEl('chat-view');else showEl('placeholder');
+  }
+}
+async function loadAnalytics(){
+  const [faq,res]=await Promise.all([api('/crm/analytics/faq'),api('/crm/analytics/reservations')]);
+  if(faq){
+    document.getElementById('s-faq-total').textContent=faq.total;
+    const max=faq.breakdown[0]?.count||1;
+    document.getElementById('faq-chart').innerHTML=faq.breakdown.length
+      ?faq.breakdown.map(i=>`<div class="bar-row"><span class="bar-label">${i.category}</span><div class="bar-track"><div class="bar-fill" style="width:${(i.count/max*100).toFixed(0)}%"></div></div><span class="bar-count">${i.count}</span></div>`).join('')
+      :'<p style="color:var(--text-dim);font-size:13px">Sin datos aún</p>';
+  }
+  if(res){
+    document.getElementById('s-guests').textContent=res.totalGuests;
+    const sC={pending_confirmation:'var(--gold)',confirmed:'var(--green)',cancelled:'var(--red)',completed:'var(--text-dim)'};
+    const sL={pending_confirmation:'Pendientes',confirmed:'Confirmadas',cancelled:'Canceladas',completed:'Completadas'};
+    document.getElementById('res-by-status').innerHTML=Object.entries(res.byStatus||{}).length
+      ?Object.entries(res.byStatus).map(([st,n])=>`<div class="status-row"><span><span class="status-dot" style="background:${sC[st]||'var(--text-dim)'}"></span>${sL[st]||st}</span><strong style="color:var(--text)">${n}</strong></div>`).join('')
+      :'<p style="color:var(--text-dim);font-size:13px">Sin datos aún</p>';
   }
 }
 
-async function loadAnalytics() {
-  const [faq, res] = await Promise.all([api('/crm/analytics/faq'), api('/crm/analytics/reservations')]);
-  if (faq) {
-    document.getElementById('s-faq-total').textContent = faq.total;
-    const max = faq.breakdown[0]?.count || 1;
-    document.getElementById('faq-chart').innerHTML = faq.breakdown.length
-      ? faq.breakdown.map(i => `
-          <div class="bar-row">
-            <span class="bar-label">${i.category}</span>
-            <div class="bar-track"><div class="bar-fill" style="width:${(i.count/max*100).toFixed(0)}%"></div></div>
-            <span class="bar-count">${i.count}</span>
-          </div>`).join('')
-      : '<p style="color:var(--muted);font-size:14px">Sin datos aún</p>';
-  }
-  if (res) {
-    document.getElementById('s-guests').textContent = res.totalGuests;
-    const sColors = { pending_confirmation:'#f59e0b', confirmed:'#10b981', cancelled:'#ef4444', completed:'#64748b' };
-    const sLabels = { pending_confirmation:'Pendientes', confirmed:'Confirmadas', cancelled:'Canceladas', completed:'Completadas' };
-    document.getElementById('res-by-status').innerHTML = Object.entries(res.byStatus||{}).length
-      ? Object.entries(res.byStatus).map(([st, n]) => `
-          <div class="status-row">
-            <span><span class="status-dot" style="background:${sColors[st]||'#64748b'}"></span>${sLabels[st]||st}</span>
-            <strong>${n}</strong>
-          </div>`).join('')
-      : '<p style="color:var(--muted);font-size:14px">Sin datos aún</p>';
-  }
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function pillHtml(status) {
-  return `<span class="pill">${pillInner(status)}</span>`;
-}
-function pillInner(status) {
-  const map = {
-    needs_confirmation: '<span class="pill pill-pending">⚠️ Pendiente</span>',
-    admin_mode:         '<span class="pill pill-admin">⏸ Admin</span>',
-    active:             '<span class="pill pill-active">● Activo</span>',
-    closed:             '<span class="pill pill-closed">Cerrado</span>',
-  };
-  return map[status] || `<span class="pill">${status}</span>`;
-}
-
-function fmtTime(iso) {
-  if (!iso) return '';
-  const d = new Date(iso), now = new Date();
-  const isToday = d.toDateString() === now.toDateString();
-  return isToday
-    ? d.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' })
-    : d.toLocaleDateString('es-ES', { day:'numeric', month:'short' });
-}
-function fmtDate(str) {
-  if (!str) return '';
-  const d = new Date(str + 'T12:00:00');
-  return d.toLocaleDateString('es-ES', { weekday:'short', day:'numeric', month:'long' });
-}
-function esc(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function show(id)   { document.getElementById(id)?.classList.remove('hidden'); }
-function hide(id)   { document.getElementById(id)?.classList.add('hidden'); }
-function showEl(id) {
-  const el = document.getElementById(id);
-  if (el) { el.classList.remove('hidden'); el.style.display = ''; }
-}
-
-// ─── Test Chat ────────────────────────────────────────────────────────────────
-let showTest = false;
-
-async function toggleTest() {
-  showTest = !showTest;
-  const testEl = document.getElementById('test-view');
-  if (showTest) {
-    testEl.classList.add('show');
-    hide('placeholder'); hide('chat-view');
+// ── Test chat ─────────────────────────────────────────────────────────────────
+async function toggleTest(){
+  showTest=!showTest;
+  const tEl=document.getElementById('test-view');
+  if(showTest){
+    tEl.classList.add('show');hide('placeholder');hide('chat-view');
     document.getElementById('analytics').classList.remove('show');
-    document.getElementById('btn-test').style.opacity = '.5';
-    document.getElementById('btn-analytics').style.opacity = '1';
-    showAnalytics = false;
-    if (!document.getElementById('test-messages').children.length) {
-      await loadTestHistory();
-    }
+    document.getElementById('btn-test').style.opacity='.5';
+    document.getElementById('btn-analytics').style.opacity='1';
+    showAnalytics=false;
+    if(!document.getElementById('test-messages').children.length)await loadTestHistory();
     scrollTestBottom();
   } else {
-    testEl.classList.remove('show');
-    document.getElementById('btn-test').style.opacity = '1';
-    if (currentPhone) showEl('chat-view'); else showEl('placeholder');
+    tEl.classList.remove('show');document.getElementById('btn-test').style.opacity='1';
+    if(currentPhone)showEl('chat-view');else showEl('placeholder');
   }
 }
-
-async function loadTestHistory() {
-  const data = await api('/crm/session/test_demo_crm');
-  if (!data) return;
-  renderTestMessages(data.history || []);
+async function loadTestHistory(){
+  const data=await api('/crm/session/test_demo_crm');if(!data)return;
+  renderTestMessages(data.history||[]);
 }
-
-function renderTestMessages(history) {
-  const el = document.getElementById('test-messages');
-  const msgs = history.filter(m => m.role !== 'admin');
-  if (!msgs.length) {
-    el.innerHTML = '<div style="text-align:center;padding:32px;color:#777;font-size:13px">Escribe algo para empezar 👋</div>';
-    return;
-  }
-  el.innerHTML = msgs.map(m => {
-    const isUser = m.role === 'user';
-    const time = fmtTime(m.created_at);
-    return `
-      <div class="tmsg ${isUser ? 'tmsg-user' : 'tmsg-agent'}">
-        ${!isUser ? '<div class="tmsg-agent-label">Gregory</div>' : ''}
-        <div class="tbubble">${esc(m.content)}</div>
-        <div class="ttime">${time}</div>
-      </div>`;
+function renderTestMessages(history){
+  const el=document.getElementById('test-messages');
+  const msgs=(history||[]).filter(m=>m.role!=='admin');
+  if(!msgs.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-dim);font-size:13px;letter-spacing:.5px">Escribe algo para empezar</div>';return;}
+  el.innerHTML=msgs.map(m=>{
+    const isUser=m.role==='user';
+    return `<div class="tmsg ${isUser?'tmsg-user':'tmsg-agent'}">${!isUser?'<div class="tmsg-agent-label">Gregory</div>':''}<div class="tbubble">${esc(m.content)}</div><div class="ttime">${fmtTime(m.created_at)}</div></div>`;
   }).join('');
   scrollTestBottom();
 }
-
-function addTestBubble(role, content) {
-  const el = document.getElementById('test-messages');
-  // Remove placeholder text if present
-  if (el.querySelector('div[style]')) el.innerHTML = '';
-  const time = fmtTime(new Date().toISOString());
-  const isUser = role === 'user';
-  el.innerHTML += `
-    <div class="tmsg ${isUser ? 'tmsg-user' : 'tmsg-agent'}">
-      ${!isUser ? '<div class="tmsg-agent-label">Gregory</div>' : ''}
-      <div class="tbubble">${esc(content)}</div>
-      <div class="ttime">${time}</div>
-    </div>`;
+function addTestBubble(role,content){
+  const el=document.getElementById('test-messages');
+  if(el.querySelector('div[style]'))el.innerHTML='';
+  const isUser=role==='user';
+  el.innerHTML+=`<div class="tmsg ${isUser?'tmsg-user':'tmsg-agent'}">${!isUser?'<div class="tmsg-agent-label">Gregory</div>':''}<div class="tbubble">${esc(content)}</div><div class="ttime">${fmtTime(new Date().toISOString())}</div></div>`;
   scrollTestBottom();
 }
-
-function showTyping() {
-  const el = document.getElementById('test-messages');
-  el.innerHTML += `<div class="ttyping" id="typing-indicator"><div class="tdots"><span></span><span></span><span></span></div></div>`;
-  scrollTestBottom();
+function showTyping(){document.getElementById('test-messages').innerHTML+=`<div class="ttyping" id="typing-indicator"><div class="tdots"><span></span><span></span><span></span></div></div>`;scrollTestBottom();}
+function hideTyping(){document.getElementById('typing-indicator')?.remove();}
+async function sendTest(){
+  const input=document.getElementById('test-input');const msg=input.value.trim();if(!msg)return;
+  const btn=document.getElementById('test-send-btn');btn.disabled=true;
+  input.value='';input.style.height='auto';
+  addTestBubble('user',msg);showTyping();
+  const data=await api('/test/message',{method:'POST',body:JSON.stringify({message:msg})});
+  hideTyping();if(data?.response)addTestBubble('assistant',data.response);
+  btn.disabled=false;input.focus();
 }
-function hideTyping() {
-  document.getElementById('typing-indicator')?.remove();
+async function clearTest(){
+  if(!confirm('¿Limpiar toda la conversación de prueba?'))return;
+  await api('/test/messages',{method:'DELETE'});
+  document.getElementById('test-messages').innerHTML='<div style="text-align:center;padding:40px;color:var(--text-dim);font-size:13px;letter-spacing:.5px">Conversación limpiada</div>';
 }
+function testKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendTest();}}
 
-async function sendTest() {
-  const input = document.getElementById('test-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-
-  const btn = document.getElementById('test-send-btn');
-  btn.disabled = true;
-  input.value = '';
-  input.style.height = 'auto';
-
-  addTestBubble('user', msg);
-  showTyping();
-
-  const data = await api('/test/message', { method: 'POST', body: JSON.stringify({ message: msg }) });
-  hideTyping();
-
-  if (data?.response) addTestBubble('assistant', data.response);
-  btn.disabled = false;
-  input.focus();
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function pillHtml(status){return `<span class="pill">${pillInner(status)}</span>`;}
+function pillInner(status){
+  const m={needs_confirmation:'<span class="pill pill-pending">◆ Pendiente</span>',admin_mode:'<span class="pill pill-admin">⏸ Admin</span>',active:'<span class="pill pill-active">● Activo</span>',closed:'<span class="pill pill-closed">Cerrado</span>'};
+  return m[status]||`<span class="pill">${status}</span>`;
 }
+function fmtTime(iso){
+  if(!iso)return'';const d=new Date(iso),now=new Date();
+  const isToday=d.toDateString()===now.toDateString();
+  return isToday?d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}):d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+}
+function fmtDate(str){
+  if(!str)return'';const d=new Date(str+'T12:00:00');
+  return d.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'long'});
+}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
+function scrollTestBottom(){const el=document.getElementById('test-messages');setTimeout(()=>{el.scrollTop=el.scrollHeight;},30);}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function show(id){document.getElementById(id)?.classList.remove('hidden');}
+function hide(id){document.getElementById(id)?.classList.add('hidden');}
+function showEl(id){const el=document.getElementById(id);if(el){el.classList.remove('hidden');el.style.display='';}}
 
-async function clearTest() {
-  if (!confirm('¿Limpiar toda la conversación de prueba?')) return;
-  await api('/test/messages', { method: 'DELETE' });
-  document.getElementById('test-messages').innerHTML =
-    '<div style="text-align:center;padding:32px;color:#777;font-size:13px">Conversación limpiada 🗑️</div>';
-}
-
-function testKeydown(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendTest(); }
-}
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
-}
-function scrollTestBottom() {
-  const el = document.getElementById('test-messages');
-  setTimeout(() => { el.scrollTop = el.scrollHeight; }, 30);
-}
-
-// ─── Auto-login ───────────────────────────────────────────────────────────────
-const saved = sessionStorage.getItem('crm_token');
-if (saved) { token = saved; hide('login'); show('app'); init(); }
+// ── Auto-login ────────────────────────────────────────────────────────────────
+const saved=sessionStorage.getItem('crm_token');
+if(saved){token=saved;hide('login');show('app');init();}
 </script>
 </body>
 </html>
