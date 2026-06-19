@@ -561,6 +561,52 @@ app.get("/crm/analytics/reservations", crmAuth, async (req, res) => {
   res.json({ total: data?.length || 0, byStatus, byService, totalGuests });
 });
 
+// ─── Test Chat (sin WhatsApp) ────────────────────────────────────────────────
+const TEST_PHONE = "test_demo_crm";
+
+// Enviar mensaje al agente y recibir respuesta directamente
+app.post("/test/message", crmAuth, async (req, res) => {
+  const { message } = req.body;
+  if (!message) return res.status(400).json({ error: "Falta message" });
+
+  const session = await getSession(TEST_PHONE);
+  await saveMessage(TEST_PHONE, "user", message);
+  await upsertSession(TEST_PHONE, { client_name: "Test Demo", status: "active" });
+
+  const history = await getHistory(TEST_PHONE);
+
+  const response = await anthropic.messages.create({
+    model: "claude-sonnet-4-20250514",
+    max_tokens: 1024,
+    system: SYSTEM_PROMPT,
+    messages: [...history, { role: "user", content: message }],
+  });
+
+  const aiText = response.content[0].text;
+  const finalText = await executeActions(aiText, TEST_PHONE, message);
+
+  await saveMessage(TEST_PHONE, "assistant", finalText);
+
+  // Devolver historial completo actualizado
+  const { data: updated } = await supabase
+    .from("conversation_memory")
+    .select("role, content, created_at")
+    .eq("tenant_id", TENANT_ID)
+    .eq("phone_number", TEST_PHONE)
+    .order("created_at", { ascending: true });
+
+  res.json({ response: finalText, history: updated || [] });
+});
+
+// Limpiar conversación de test
+app.delete("/test/messages", crmAuth, async (req, res) => {
+  await supabase.from("conversation_memory").delete()
+    .eq("tenant_id", TENANT_ID).eq("phone_number", TEST_PHONE);
+  await supabase.from("chat_sessions").delete()
+    .eq("tenant_id", TENANT_ID).eq("phone_number", TEST_PHONE);
+  res.json({ ok: true });
+});
+
 // ─── WhatsApp Webhook ─────────────────────────────────────────────────────────
 app.get("/webhook", (req, res) => {
   if (
