@@ -556,6 +556,46 @@ app.put("/crm/reservation/:id/cancel", crmAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
+// ─── CRM: Clientes ───────────────────────────────────────────────────────────
+app.get("/crm/clients", crmAuth, async (req, res) => {
+  const [cliRes, resRes, sessRes] = await Promise.all([
+    supabase.from("clients").select("*").eq("tenant_id", TENANT_ID).order("last_contact", { ascending: false }),
+    supabase.from("reservations").select("phone_number, status, date, service").eq("tenant_id", TENANT_ID),
+    supabase.from("chat_sessions").select("phone_number, status, last_message").eq("tenant_id", TENANT_ID),
+  ]);
+
+  const resByPhone = {};
+  for (const r of resRes.data || []) {
+    if (!resByPhone[r.phone_number]) resByPhone[r.phone_number] = { total: 0, confirmed: 0, pending: 0 };
+    resByPhone[r.phone_number].total++;
+    if (r.status === "confirmed") resByPhone[r.phone_number].confirmed++;
+    if (r.status === "pending_confirmation") resByPhone[r.phone_number].pending++;
+  }
+  const sessMap = {};
+  for (const s of sessRes.data || []) sessMap[s.phone_number] = s;
+
+  const result = (cliRes.data || []).map(c => ({
+    ...c,
+    reservation_count: resByPhone[c.phone_number]?.total || 0,
+    confirmed_count: resByPhone[c.phone_number]?.confirmed || 0,
+    pending_count: resByPhone[c.phone_number]?.pending || 0,
+    chat_status: sessMap[c.phone_number]?.status || null,
+    last_message: sessMap[c.phone_number]?.last_message || null,
+  }));
+
+  res.json(result);
+});
+
+app.get("/crm/client/:phone/reservations", crmAuth, async (req, res) => {
+  const { phone } = req.params;
+  const { data, error } = await supabase
+    .from("reservations").select("*")
+    .eq("tenant_id", TENANT_ID).eq("phone_number", phone)
+    .order("date", { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
+});
+
 // ─── CRM: Analytics ───────────────────────────────────────────────────────────
 app.get("/crm/analytics/faq", crmAuth, async (req, res) => {
   const { data, error } = await supabase

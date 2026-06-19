@@ -288,6 +288,21 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .warn-box{background:var(--red-bg);border:1px solid var(--red-bd);border-radius:var(--radius);padding:10px 13px;font-size:12px;color:var(--red);margin-bottom:12px}
 .empty-state{text-align:center;padding:36px 16px;color:var(--text-dim);font-size:13px}
 
+/* ── CLIENTES ── */
+.cli-detail{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.cli-stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid var(--border);flex-shrink:0}
+.cli-stat{padding:14px 18px;text-align:center;border-right:1px solid var(--border)}
+.cli-stat:last-child{border-right:none}
+.cli-stat-val{font-size:22px;font-weight:700;color:var(--gold)}
+.cli-stat-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
+.cli-res-list{flex:1;overflow-y:auto;padding:16px}
+.cli-res-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.cli-res-date{font-size:14px;font-weight:700;color:var(--text);min-width:80px}
+.cli-res-info{flex:1}
+.cli-res-info p{font-size:13px;color:var(--text-muted)}
+.cli-res-info strong{font-size:13px;color:var(--text)}
+.hcard-res{font-size:11px;color:var(--gold);font-weight:600}
+
 /* ── MISC ── */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 </style>
@@ -327,6 +342,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="nav-item" data-tab="historial" onclick="switchTab('historial',this)">
         <span class="nav-icon">💬</span> Historial de chats
         <span class="nav-badge hidden" id="badge-historial">0</span>
+      </div>
+      <div class="nav-item" data-tab="clientes" onclick="switchTab('clientes',this)">
+        <span class="nav-icon">👥</span> Clientes
       </div>
       <div class="nav-item" data-tab="metricas" onclick="switchTab('metricas',this)">
         <span class="nav-icon">📊</span> Métricas
@@ -426,6 +444,25 @@ tr:hover td{background:rgba(255,255,255,.02)}
           <div class="hdetail-ph">
             <div class="hdetail-ph-brand">Feeling</div>
             <div class="hdetail-ph-sub">Selecciona una conversación</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CLIENTES ── -->
+    <div id="tab-clientes" class="tab-panel no-pad">
+      <div class="historial-wrap">
+        <div class="hlist">
+          <div class="hlist-header">
+            <h3>Directorio de clientes</h3>
+            <div class="hlist-search"><input type="text" placeholder="Buscar por nombre o teléfono…" id="cli-search" oninput="renderClientList()"></div>
+          </div>
+          <div class="hlist-body" id="cli-list"></div>
+        </div>
+        <div class="cli-detail" id="cli-detail">
+          <div class="hdetail-ph">
+            <div class="hdetail-ph-brand">Feeling</div>
+            <div class="hdetail-ph-sub">Selecciona un cliente</div>
           </div>
         </div>
       </div>
@@ -599,7 +636,7 @@ document.getElementById('login-key').addEventListener('keydown',e=>{if(e.key==='
 
 // ── INIT ───────────────────────────────────────────────────────────────────────
 async function init(){
-  await Promise.all([loadSessions(),loadReservations(),loadOverview()]);
+  await Promise.all([loadSessions(),loadReservations(),loadOverview(),loadClients()]);
   loadTestHistory();loadSettings();
   refreshTimer=setInterval(refresh,30000);
 }
@@ -619,7 +656,7 @@ async function api(url,opts={}){
 }
 
 // ── TABS ───────────────────────────────────────────────────────────────────────
-const tabMeta={principal:'Resumen general',reservas:'Gestión',historial:'Conversaciones',metricas:'Análisis',test:'Simulador',ajustes:'Configuración'};
+const tabMeta={principal:'Resumen general',reservas:'Gestión',historial:'Conversaciones',clientes:'Directorio',metricas:'Análisis',test:'Simulador',ajustes:'Configuración'};
 function switchTab(tab,el){
   currentTab=tab;
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -636,6 +673,7 @@ function switchTab(tab,el){
   }
   if(tab==='principal'){loadOverview();loadReservations();}
   if(tab==='reservas'){loadReservations();}
+  if(tab==='clientes'){loadClients();}
   // Polling del test (para recibir mensajes de admin)
   if(tab==='test'){loadTestHistory();startTestPoll();}
   else{stopTestPoll();}
@@ -894,6 +932,93 @@ function renderFreqTable(clients){
   el.innerHTML=`<table class="freq-table"><thead><tr><th>#</th><th>Cliente</th><th>Teléfono</th><th>Reservas</th></tr></thead><tbody>${
     clients.map((c,i)=>`<tr><td style="color:var(--text-dim)">${i+1}</td><td>${esc(c.name||'—')}</td><td style="color:var(--text-muted)">${c.phone}</td><td style="color:var(--gold);font-weight:700">${c.reservations}</td></tr>`).join('')
   }</tbody></table>`;
+}
+
+// ── CLIENTES ──────────────────────────────────────────────────────────────────
+let clients=[],currentCliPhone=null;
+
+async function loadClients(){
+  const d=await api('/crm/clients');if(!d)return;
+  clients=d;renderClientList();
+}
+
+function renderClientList(){
+  const search=(document.getElementById('cli-search')?.value||'').toLowerCase();
+  let list=[...clients];
+  if(search)list=list.filter(c=>(c.name||'').toLowerCase().includes(search)||(c.phone_number||'').includes(search));
+  const el=document.getElementById('cli-list');if(!el)return;
+  if(!list.length){el.innerHTML='<div class="empty-state">Sin clientes registrados</div>';return;}
+  el.innerHTML=list.map(c=>{
+    const statusClass=c.chat_status==='admin_mode'?'admin':c.chat_status==='needs_confirmation'?'pending':c.pending_count>0?'pending':'active';
+    const badge=c.pending_count>0?`<span class="pill pill-pending" style="font-size:10px">⏳ ${c.pending_count} pend.</span>`:'';
+    return`<div class="hcard${c.phone_number===currentCliPhone?' sel':''}" onclick="loadClientDetail('${c.phone_number}')">
+      <div class="hcard-top">
+        <span class="hcard-name">${esc(c.name||c.phone_number)}</span>
+        <span class="hcard-res">${c.reservation_count} res.</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
+        ${badge||`<span style="font-size:11px;color:var(--text-dim)">${c.phone_number}</span>`}
+        <span style="font-size:11px;color:var(--text-dim)">${fmtDate(c.last_contact||c.created_at)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadClientDetail(phone){
+  currentCliPhone=phone;renderClientList();
+  const c=clients.find(x=>x.phone_number===phone);
+  if(!c)return;
+  const cliRes=await api(`/crm/client/${phone}/reservations`)||[];
+
+  // Merge into global reservations so findRes() works from this tab
+  cliRes.forEach(r=>{
+    const i=reservations.findIndex(x=>String(x.id)===String(r.id));
+    if(i>=0)reservations[i]=r;else reservations.push(r);
+  });
+
+  const det=document.getElementById('cli-detail');if(!det)return;
+  const statusPill=c.chat_status==='admin_mode'?`<span class="pill pill-admin">Admin</span>`:
+    c.chat_status==='needs_confirmation'?`<span class="pill pill-pending">Pendiente</span>`:
+    c.chat_status==='active'?`<span class="pill pill-active">Activo</span>`:'';
+
+  det.innerHTML=`
+    <div class="chat-hdr">
+      <div class="chat-client">
+        <h3>${esc(c.name||c.phone_number)}</h3>
+        <p>${c.phone_number} · Cliente desde ${fmtDate(c.created_at)}</p>
+      </div>
+      <div class="chat-acts">
+        ${statusPill}
+        <button class="btn btn-ghost btn-sm" onclick="goToClientChat('${phone}')">💬 Ver chat</button>
+      </div>
+    </div>
+    <div class="cli-stats-bar">
+      <div class="cli-stat"><div class="cli-stat-val">${c.reservation_count}</div><div class="cli-stat-lbl">Total reservas</div></div>
+      <div class="cli-stat"><div class="cli-stat-val" style="color:var(--green)">${c.confirmed_count}</div><div class="cli-stat-lbl">Confirmadas</div></div>
+      <div class="cli-stat"><div class="cli-stat-val" style="color:var(--orange)">${c.pending_count}</div><div class="cli-stat-lbl">Pendientes</div></div>
+      <div class="cli-stat"><div class="cli-stat-val" style="color:var(--text-muted);font-size:13px">${fmtDate(c.last_contact)}</div><div class="cli-stat-lbl">Último contacto</div></div>
+    </div>
+    <div class="cli-res-list">
+      ${cliRes.length?`
+        <div style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Historial de reservas</div>
+        ${cliRes.map(r=>`
+          <div class="cli-res-item">
+            <div class="cli-res-date">${fmtDate(r.date)}</div>
+            <div class="cli-res-info">
+              <strong>${esc(r.service||'—')}</strong>
+              <p>${(r.time||'').substring(0,5)} · ${r.num_guests} persona${r.num_guests>1?'s':''}${r.notes?` · ${esc(r.notes)}`:''}</p>
+            </div>
+            <div>${pillHtml(r.status)}</div>
+            ${r.status==='pending_confirmation'?`<button class="btn btn-success btn-sm" onclick="openConfirm('${r.id}')">✓ Confirmar</button>`:''}
+          </div>`).join('')}
+      `:'<div class="empty-state">Este cliente aún no tiene reservas</div>'}
+    </div>`;
+}
+
+function goToClientChat(phone){
+  const el=document.querySelector('[data-tab="historial"]');
+  switchTab('historial',el);
+  loadSessions().then(()=>loadChat(phone));
 }
 
 // ── TEST CHAT ─────────────────────────────────────────────────────────────────
