@@ -630,6 +630,12 @@ function switchTab(tab,el){
   document.getElementById('topbar-title').textContent=el.textContent.trim().replace(/\d+/,'').trim();
   document.getElementById('topbar-meta').textContent=' · '+(tabMeta[tab]||'');
   if(tab==='metricas'&&!metricsLoaded){metricsLoaded=true;loadMetrics('month');}
+  // Refresh instantáneo al entrar a pestañas con datos en vivo
+  if(tab==='historial'){
+    loadSessions().then(()=>{ if(currentPhone) loadChat(currentPhone,false); });
+  }
+  if(tab==='principal'){loadOverview();loadReservations();}
+  if(tab==='reservas'){loadReservations();}
 }
 
 // ── OVERVIEW ──────────────────────────────────────────────────────────────────
