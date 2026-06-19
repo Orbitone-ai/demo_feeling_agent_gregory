@@ -84,7 +84,7 @@ INSTRUCCIONES:
 2. Mensajes cortos y cálidos, máximo 3 párrafos
 3. Usa emojis con moderación, transmite ambiente mediterráneo y acogedor
 4. Para eventos, agenda de DJ o novedades, remite siempre a @feelingvilanova en Instagram
-5. Para anotar una reserva necesitas: nombre completo, fecha, hora y número de comensales
+5. Para anotar una reserva necesitas TODOS estos datos (pídelos de forma natural, uno a uno si es necesario): nombre completo, email de contacto, teléfono de contacto, fecha, hora y número de comensales
 6. NUNCA digas que la reserva está confirmada — di SIEMPRE: "¡Perfecto! En breve te confirmaremos tu reserva 😊"
 7. No inventes información que no esté en estos datos; si no lo sabes, invita a llamar al local
 8. Para grupos o eventos privados, indica que el equipo les contactará para personalizar
@@ -93,7 +93,7 @@ CATEGORIZA cada consulta al inicio de tu respuesta con uno de estos tags (será 
 [FAQ:horario] [FAQ:menu] [FAQ:precio] [FAQ:reserva] [FAQ:eventos] [FAQ:ubicacion] [FAQ:bebidas] [FAQ:grupos] [FAQ:domicilio] [FAQ:otro]
 
 GESTIÓN DE RESERVAS — coloca el tag ANTES de tu respuesta amigable:
-- Anotar: [ACTION:CREATE_RESERVATION] {"client_name":"...","date":"YYYY-MM-DD","time":"HH:MM","num_guests":N,"service":"...","notes":"..."}
+- Anotar: [ACTION:CREATE_RESERVATION] {"client_name":"...","email":"...","phone":"...","date":"YYYY-MM-DD","time":"HH:MM","num_guests":N,"service":"...","notes":"..."}
 - Modificar: [ACTION:MODIFY_RESERVATION] {"reservation_id":"...","date":"...","time":"...","num_guests":N,"notes":"..."}
 - Cancelar: [ACTION:CANCEL_RESERVATION] {"reservation_id":"..."}
 - Ver reservas: [ACTION:GET_RESERVATIONS] {}
@@ -200,12 +200,13 @@ async function saveMessage(phone, role, content) {
   if (error) console.error(`[saveMessage] ERROR phone=${phone} role=${role}:`, JSON.stringify(error));
 }
 
-async function upsertClient(phone, name) {
+async function upsertClient(phone, name, email) {
   await supabase.from("clients").upsert(
     {
       tenant_id: TENANT_ID,
       phone_number: phone,
       ...(name && { name }),
+      ...(email && { email }),
       last_contact: new Date().toISOString(),
     },
     { onConflict: "tenant_id,phone_number" }
@@ -220,6 +221,7 @@ async function createReservation(phone, p) {
       tenant_id: TENANT_ID,
       phone_number: phone,
       client_name: p.client_name,
+      email: p.email || null,
       date: p.date,
       time: p.time,
       num_guests: p.num_guests || 1,
@@ -302,7 +304,7 @@ async function executeActions(aiText, phone, userText) {
       switch (action) {
         case "CREATE_RESERVATION": {
           await createReservation(phone, params);
-          await upsertClient(phone, params.client_name);
+          await upsertClient(phone, params.client_name, params.email);
           // Marcar sesión como pendiente → alerta amarilla en el CRM
           await upsertSession(phone, {
             client_name: params.client_name,

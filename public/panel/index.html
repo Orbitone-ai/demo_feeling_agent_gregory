@@ -423,7 +423,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="section-card">
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Cliente</th><th>Teléfono</th><th>Fecha</th><th>Hora</th><th>Personas</th><th>Servicio</th><th>Estado</th><th>Notas</th><th>Acciones</th></tr></thead>
+            <thead><tr><th>Cliente</th><th>Teléfono</th><th>Email</th><th>Fecha</th><th>Hora</th><th>Personas</th><th>Servicio</th><th>Estado</th><th>Notas</th><th>Acciones</th></tr></thead>
             <tbody id="res-tbody"></tbody>
           </table>
         </div>
@@ -734,10 +734,11 @@ function renderResTable(){
   if(search)list=list.filter(r=>(r.client_name||'').toLowerCase().includes(search)||(r.phone_number||'').includes(search));
   list.sort((a,b)=>{const o={pending_confirmation:0,confirmed:1,completed:2,cancelled:3};return((o[a.status]??4)-(o[b.status]??4))||((a.date||'')>=(b.date||'')?1:-1);});
   const tb=document.getElementById('res-tbody');if(!tb)return;
-  if(!list.length){tb.innerHTML=`<tr><td colspan="9" class="empty-state">Sin reservas</td></tr>`;return;}
+  if(!list.length){tb.innerHTML=`<tr><td colspan="10" class="empty-state">Sin reservas</td></tr>`;return;}
   tb.innerHTML=list.map(r=>`<tr>
     <td><strong>${esc(r.client_name||'—')}</strong></td>
     <td style="color:var(--text-muted)">${r.phone_number||'—'}</td>
+    <td style="color:var(--text-muted);font-size:12px">${esc(r.email||'—')}</td>
     <td>${fmtDate(r.date)}</td>
     <td>${(r.time||'').substring(0,5)||'—'}</td>
     <td>${r.num_guests||'—'}</td>
@@ -957,9 +958,10 @@ function renderClientList(){
         <span class="hcard-res">${c.reservation_count} res.</span>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
-        ${badge||`<span style="font-size:11px;color:var(--text-dim)">${c.phone_number}</span>`}
-        <span style="font-size:11px;color:var(--text-dim)">${fmtDate(c.last_contact||c.created_at)}</span>
+        <span style="font-size:11px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${esc(c.email||c.phone_number)}</span>
+        <span style="font-size:11px;color:var(--text-dim);flex-shrink:0">${fmtDate(c.last_contact||c.created_at)}</span>
       </div>
+      ${badge?`<div style="margin-top:4px">${badge}</div>`:''}
     </div>`;
   }).join('');
 }
@@ -985,7 +987,7 @@ async function loadClientDetail(phone){
     <div class="chat-hdr">
       <div class="chat-client">
         <h3>${esc(c.name||c.phone_number)}</h3>
-        <p>${c.phone_number} · Cliente desde ${fmtDate(c.created_at)}</p>
+        <p>${c.phone_number}${c.email?` · ${esc(c.email)}`:''} · Cliente desde ${fmtDate(c.created_at)}</p>
       </div>
       <div class="chat-acts">
         ${statusPill}
