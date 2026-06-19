@@ -789,7 +789,7 @@ async function sendAdmin(phone){
 function adminKey(e,phone){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAdmin(phone);}}
 
 // ── RESERVATION MODALS ────────────────────────────────────────────────────────
-function findRes(id){return reservations.find(r=>r.id===id)||(currentReservation?.id===id?currentReservation:null);}
+function findRes(id){const s=String(id);return reservations.find(r=>String(r.id)===s)||(currentReservation&&String(currentReservation.id)===s?currentReservation:null);}
 function resSummary(r){return`📅 ${fmtDate(r.date)}  ·  🕐 ${(r.time||'').substring(0,5)}  ·  👥 ${r.num_guests} persona${r.num_guests>1?'s':''}  ·  🍽️ ${r.service}${r.notes?'\n📝 '+r.notes:''}`;}
 
 function openConfirm(id){
