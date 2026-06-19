@@ -762,6 +762,19 @@ app.post("/test/message", crmAuth, async (req, res) => {
   if (!message) return res.status(400).json({ error: "Falta message" });
 
   const session = await getSession(TEST_PHONE);
+
+  // Admin intercediendo → guardar mensaje pero no responder con IA
+  if (session?.status === "admin_mode") {
+    await saveMessage(TEST_PHONE, "user", message);
+    const { data: updated } = await supabase
+      .from("conversation_memory")
+      .select("role, content, created_at")
+      .eq("tenant_id", TENANT_ID)
+      .eq("phone_number", TEST_PHONE)
+      .order("created_at", { ascending: true });
+    return res.json({ response: null, history: updated || [], admin_mode: true });
+  }
+
   await saveMessage(TEST_PHONE, "user", message);
   await upsertSession(TEST_PHONE, { client_name: "Test Demo", status: "active" });
 

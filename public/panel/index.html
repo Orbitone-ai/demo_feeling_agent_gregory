@@ -922,7 +922,14 @@ async function sendTest(){
   input.value='';input.style.height='auto';
   addTestBubble('user',msg);showTyping();
   const d=await api('/test/message',{method:'POST',body:JSON.stringify({message:msg})});
-  hideTyping();if(d?.response)addTestBubble('assistant',d.response);
+  hideTyping();
+  if(d?.admin_mode){
+    const el=document.getElementById('test-messages');
+    if(el)el.innerHTML+=`<div class="tmsg tmsg-agent"><div class="tbubble" style="background:var(--orange-bg);border:1px solid var(--orange-bd);color:var(--orange)">⏸ Admin intercedido — la IA no responde. Ve al Historial para contestar manualmente.</div></div>`;
+    scrollTestBottom();
+  } else if(d?.response){
+    addTestBubble('assistant',d.response);
+  }
   btn.disabled=false;input.focus();
 }
 async function clearTest(){
