@@ -378,7 +378,7 @@ async function handleMessage(phone, text) {
 
   const systemPrompt = await buildSystemPrompt();
   const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-sonnet-4-5",
     max_tokens: 1024,
     system: systemPrompt,
     messages: [...history, { role: "user", content: text }],
@@ -767,7 +767,7 @@ app.post("/test/message", crmAuth, async (req, res) => {
   const systemPrompt = await buildSystemPrompt();
 
   const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-sonnet-4-5",
     max_tokens: 1024,
     system: systemPrompt,
     messages: [...history, { role: "user", content: message }],
