@@ -155,7 +155,7 @@ async function sendWAMessage(to, text) {
 
 // ─── Sesiones ─────────────────────────────────────────────────────────────────
 async function upsertSession(phone, updates = {}) {
-  await supabase.from("chat_sessions").upsert(
+  const { error } = await supabase.from("chat_sessions").upsert(
     {
       tenant_id: TENANT_ID,
       phone_number: phone,
@@ -164,6 +164,7 @@ async function upsertSession(phone, updates = {}) {
     },
     { onConflict: "tenant_id,phone_number" }
   );
+  if (error) console.error(`[upsertSession] ERROR phone=${phone}:`, JSON.stringify(error));
 }
 
 async function getSession(phone) {
@@ -190,12 +191,13 @@ async function getHistory(phone) {
 }
 
 async function saveMessage(phone, role, content) {
-  await supabase.from("conversation_memory").insert({
+  const { error } = await supabase.from("conversation_memory").insert({
     tenant_id: TENANT_ID,
     phone_number: phone,
     role,
     content,
   });
+  if (error) console.error(`[saveMessage] ERROR phone=${phone} role=${role}:`, JSON.stringify(error));
 }
 
 async function upsertClient(phone, name) {
