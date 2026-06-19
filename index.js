@@ -34,8 +34,8 @@ if (!TENANT_ID) {
   process.exit(1);
 }
 
-// ─── System Prompt ────────────────────────────────────────────────────────────
-const SYSTEM_PROMPT = `
+// ─── System Prompt Base ───────────────────────────────────────────────────────
+const BASE_SYSTEM_PROMPT = `
 Eres Gregory, el asistente virtual de Feeling Vilanova Grand Marina, el pub-restaurante con la terraza musical más bonita de Vilanova i la Geltrú, con vistas al Puerto Gran Marina y al Mediterráneo.
 
 DATOS DEL LOCAL:
@@ -99,6 +99,41 @@ GESTIÓN DE RESERVAS — coloca el tag ANTES de tu respuesta amigable:
 - Ver reservas: [ACTION:GET_RESERVATIONS] {}
 - Escalar: [ACTION:ESCALATE] {"reason":"..."}
 `.trim();
+
+// ─── Agent Settings Cache ─────────────────────────────────────────────────────
+let _settingsCache = null;
+let _settingsCacheAt = 0;
+const SETTINGS_TTL = 5 * 60 * 1000;
+
+async function getAgentSettings() {
+  if (_settingsCache && Date.now() - _settingsCacheAt < SETTINGS_TTL) return _settingsCache;
+  const { data } = await supabase
+    .from("agent_settings")
+    .select("*")
+    .eq("tenant_id", TENANT_ID)
+    .maybeSingle();
+  _settingsCache = data || { agent_name: "Gregory", tone: "amigable, profesional y cálido", extra_context: "", avatar_url: "" };
+  _settingsCacheAt = Date.now();
+  return _settingsCache;
+}
+
+async function buildSystemPrompt() {
+  const s = await getAgentSettings();
+  let prompt = BASE_SYSTEM_PROMPT.replace(
+    "Eres Gregory, el asistente virtual",
+    `Eres ${s.agent_name}, el asistente virtual`
+  );
+  if (s.tone) {
+    prompt = prompt.replace(
+      "Mensajes cortos y cálidos, máximo 3 párrafos",
+      `Mensajes cortos y ${s.tone}, máximo 3 párrafos`
+    );
+  }
+  if (s.extra_context) {
+    prompt += `\n\nINFORMACIÓN ADICIONAL DEL NEGOCIO:\n${s.extra_context}`;
+  }
+  return prompt;
+}
 
 // ─── WhatsApp ─────────────────────────────────────────────────────────────────
 async function sendWAMessage(to, text) {
@@ -341,10 +376,11 @@ async function handleMessage(phone, text) {
 
   const history = await getHistory(phone);
 
+  const systemPrompt = await buildSystemPrompt();
   const response = await anthropic.messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 1024,
-    system: SYSTEM_PROMPT,
+    system: systemPrompt,
     messages: [...history, { role: "user", content: text }],
   });
 
@@ -561,6 +597,160 @@ app.get("/crm/analytics/reservations", crmAuth, async (req, res) => {
   res.json({ total: data?.length || 0, byStatus, byService, totalGuests });
 });
 
+// ─── CRM: Editar reserva ─────────────────────────────────────────────────────
+app.put("/crm/reservation/:id/edit", crmAuth, async (req, res) => {
+  const { id } = req.params;
+  const { date, time, num_guests, service, notes } = req.body;
+  const updates = {};
+  if (date !== undefined) updates.date = date;
+  if (time !== undefined) updates.time = time;
+  if (num_guests !== undefined) updates.num_guests = parseInt(num_guests);
+  if (service !== undefined) updates.service = service;
+  if (notes !== undefined) updates.notes = notes;
+
+  const { data, error } = await supabase
+    .from("reservations")
+    .update(updates)
+    .eq("id", id)
+    .eq("tenant_id", TENANT_ID)
+    .select()
+    .single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+// ─── CRM: Agent Settings ─────────────────────────────────────────────────────
+app.get("/crm/settings", crmAuth, async (req, res) => {
+  const s = await getAgentSettings();
+  res.json(s);
+});
+
+app.put("/crm/settings", crmAuth, async (req, res) => {
+  const { agent_name, tone, extra_context, avatar_url } = req.body;
+  const payload = { tenant_id: TENANT_ID, updated_at: new Date().toISOString() };
+  if (agent_name !== undefined) payload.agent_name = agent_name;
+  if (tone !== undefined) payload.tone = tone;
+  if (extra_context !== undefined) payload.extra_context = extra_context;
+  if (avatar_url !== undefined) payload.avatar_url = avatar_url;
+
+  const { data, error } = await supabase
+    .from("agent_settings")
+    .upsert(payload, { onConflict: "tenant_id" })
+    .select()
+    .single();
+  if (error) return res.status(500).json({ error: error.message });
+  _settingsCache = null; // invalidar caché
+  res.json(data);
+});
+
+// ─── CRM: Overview (tab Principal) ───────────────────────────────────────────
+app.get("/crm/analytics/overview", crmAuth, async (req, res) => {
+  const monthStart = new Date();
+  monthStart.setDate(1); monthStart.setHours(0,0,0,0);
+
+  const [sessRes, resRes, cliRes, faqRes] = await Promise.all([
+    supabase.from("chat_sessions").select("status").eq("tenant_id", TENANT_ID),
+    supabase.from("reservations").select("status, num_guests, created_at").eq("tenant_id", TENANT_ID),
+    supabase.from("clients").select("created_at").eq("tenant_id", TENANT_ID),
+    supabase.from("faq_log").select("id", { count: "exact", head: true }).eq("tenant_id", TENANT_ID),
+  ]);
+
+  const sessions = sessRes.data || [];
+  const reservations = resRes.data || [];
+  const clients = cliRes.data || [];
+  const mISO = monthStart.toISOString();
+
+  const monthRes = reservations.filter(r => r.created_at >= mISO);
+  const monthCli = clients.filter(c => c.created_at >= mISO);
+
+  res.json({
+    totalChats: sessions.length,
+    activeChats: sessions.filter(s => s.status === "active").length,
+    pendingConfirmation: sessions.filter(s => s.status === "needs_confirmation").length,
+    adminMode: sessions.filter(s => s.status === "admin_mode").length,
+    totalReservations: reservations.length,
+    confirmedThisMonth: monthRes.filter(r => r.status === "confirmed").length,
+    pendingThisMonth: monthRes.filter(r => r.status === "pending_confirmation").length,
+    totalGuests: reservations.reduce((s, r) => s + (r.num_guests || 0), 0),
+    totalClients: clients.length,
+    newClientsThisMonth: monthCli.length,
+    totalFAQ: faqRes.count || 0,
+  });
+});
+
+// ─── CRM: Metrics (tab Métricas) ──────────────────────────────────────────────
+app.get("/crm/analytics/metrics", crmAuth, async (req, res) => {
+  const { period = "month" } = req.query;
+  const now = new Date();
+  let dateFrom;
+
+  if (period === "week") {
+    dateFrom = new Date(now); dateFrom.setDate(now.getDate() - 7);
+  } else if (period === "6months") {
+    dateFrom = new Date(now); dateFrom.setMonth(now.getMonth() - 6);
+  } else {
+    dateFrom = new Date(now); dateFrom.setDate(now.getDate() - 30);
+  }
+
+  const [resData, faqData, cliData] = await Promise.all([
+    supabase.from("reservations").select("*").eq("tenant_id", TENANT_ID).gte("created_at", dateFrom.toISOString()),
+    supabase.from("faq_log").select("category").eq("tenant_id", TENANT_ID).gte("created_at", dateFrom.toISOString()),
+    supabase.from("clients").select("phone_number, name, created_at").eq("tenant_id", TENANT_ID),
+  ]);
+
+  const reservations = resData.data || [];
+  const clients = cliData.data || [];
+
+  // Agrupar reservas por bucket temporal
+  const buckets = {};
+  for (const r of reservations) {
+    const d = new Date(r.created_at);
+    let key;
+    if (period === "week") key = d.toISOString().split("T")[0];
+    else if (period === "6months") key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+    else {
+      const ws = new Date(d); ws.setDate(d.getDate() - d.getDay()); key = ws.toISOString().split("T")[0];
+    }
+    if (!buckets[key]) buckets[key] = { confirmed: 0, pending: 0, cancelled: 0, guests: 0 };
+    if (r.status === "confirmed") buckets[key].confirmed++;
+    else if (r.status === "pending_confirmation") buckets[key].pending++;
+    else buckets[key].cancelled++;
+    buckets[key].guests += r.num_guests || 0;
+  }
+
+  // Clientes frecuentes (con más de 1 reserva)
+  const allResByPhone = {};
+  const { data: allRes } = await supabase.from("reservations").select("phone_number, client_name").eq("tenant_id", TENANT_ID);
+  for (const r of allRes || []) allResByPhone[r.phone_number] = (allResByPhone[r.phone_number] || 0) + 1;
+  const frequentClients = clients
+    .filter(c => (allResByPhone[c.phone_number] || 0) > 1)
+    .map(c => ({ name: c.name, phone: c.phone_number, reservations: allResByPhone[c.phone_number] || 0 }))
+    .sort((a, b) => b.reservations - a.reservations)
+    .slice(0, 10);
+
+  // Breakdown por servicio
+  const byService = {};
+  for (const r of reservations) byService[r.service || "Otros"] = (byService[r.service || "Otros"] || 0) + 1;
+
+  // FAQ breakdown
+  const faqCounts = {};
+  for (const f of faqData.data || []) faqCounts[f.category] = (faqCounts[f.category] || 0) + 1;
+
+  res.json({
+    period,
+    timeline: Object.entries(buckets).sort(([a],[b])=>a.localeCompare(b)).map(([date,d])=>({date,...d})),
+    totalReservations: reservations.length,
+    confirmed: reservations.filter(r=>r.status==="confirmed").length,
+    pending: reservations.filter(r=>r.status==="pending_confirmation").length,
+    cancelled: reservations.filter(r=>!["confirmed","pending_confirmation"].includes(r.status)).length,
+    totalGuests: reservations.reduce((s,r)=>s+(r.num_guests||0),0),
+    avgGuests: reservations.length ? Math.round(reservations.reduce((s,r)=>s+(r.num_guests||0),0)/reservations.length*10)/10 : 0,
+    byService: Object.entries(byService).sort(([,a],[,b])=>b-a).map(([service,count])=>({service,count})),
+    frequentClients,
+    faqBreakdown: Object.entries(faqCounts).sort(([,a],[,b])=>b-a).map(([category,count])=>({category,count})),
+  });
+});
+
 // ─── Test Chat (sin WhatsApp) ────────────────────────────────────────────────
 const TEST_PHONE = "test_demo_crm";
 
@@ -574,11 +764,12 @@ app.post("/test/message", crmAuth, async (req, res) => {
   await upsertSession(TEST_PHONE, { client_name: "Test Demo", status: "active" });
 
   const history = await getHistory(TEST_PHONE);
+  const systemPrompt = await buildSystemPrompt();
 
   const response = await anthropic.messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 1024,
-    system: SYSTEM_PROMPT,
+    system: systemPrompt,
     messages: [...history, { role: "user", content: message }],
   });
 
