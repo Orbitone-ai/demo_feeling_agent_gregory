@@ -636,6 +636,9 @@ function switchTab(tab,el){
   }
   if(tab==='principal'){loadOverview();loadReservations();}
   if(tab==='reservas'){loadReservations();}
+  // Polling del test (para recibir mensajes de admin)
+  if(tab==='test'){loadTestHistory();startTestPoll();}
+  else{stopTestPoll();}
 }
 
 // ── OVERVIEW ──────────────────────────────────────────────────────────────────
@@ -900,13 +903,23 @@ async function loadTestHistory(){
 }
 function renderTestMsgs(history){
   const el=document.getElementById('test-messages');if(!el)return;
-  const msgs=(history||[]).filter(m=>m.role!=='admin');
-  if(!msgs.length){el.innerHTML='<div class="empty-state">Escribe algo para probar a Gregory 👋</div>';return;}
-  el.innerHTML=msgs.map(m=>{
+  if(!(history||[]).length){el.innerHTML='<div class="empty-state">Escribe algo para probar a Gregory 👋</div>';return;}
+  el.innerHTML=(history||[]).map(m=>{
     const isUser=m.role==='user';
+    const isAdmin=m.role==='admin';
+    if(isAdmin)return`<div class="tmsg tmsg-agent"><div class="tmsg-label" style="color:var(--gold)">ADMIN</div><div class="tbubble" style="background:var(--gold-dim);border:1px solid var(--gold-border)">${esc(m.content)}</div><div class="ttime">${fmtTime(m.created_at)}</div></div>`;
     return`<div class="tmsg ${isUser?'tmsg-user':'tmsg-agent'}">${!isUser?'<div class="tmsg-label">Gregory</div>':''}<div class="tbubble">${esc(m.content)}</div><div class="ttime">${fmtTime(m.created_at)}</div></div>`;
   }).join('');scrollTestBottom();
 }
+let _testPoll=null;
+function startTestPoll(){
+  if(_testPoll)return;
+  _testPoll=setInterval(async()=>{
+    const d=await api('/crm/session/test_demo_crm');
+    if(d)renderTestMsgs(d.history||[]);
+  },3000);
+}
+function stopTestPoll(){clearInterval(_testPoll);_testPoll=null;}
 function addTestBubble(role,content){
   const el=document.getElementById('test-messages');if(!el)return;
   if(el.querySelector('.empty-state'))el.innerHTML='';
@@ -924,8 +937,9 @@ async function sendTest(){
   const d=await api('/test/message',{method:'POST',body:JSON.stringify({message:msg})});
   hideTyping();
   if(d?.admin_mode){
+    renderTestMsgs(d.history||[]);
     const el=document.getElementById('test-messages');
-    if(el)el.innerHTML+=`<div class="tmsg tmsg-agent"><div class="tbubble" style="background:var(--orange-bg);border:1px solid var(--orange-bd);color:var(--orange)">⏸ Admin intercedido — la IA no responde. Ve al Historial para contestar manualmente.</div></div>`;
+    if(el)el.innerHTML+=`<div class="tmsg tmsg-agent"><div class="tbubble" style="background:var(--orange-bg);border:1px solid var(--orange-bd);color:var(--orange)">⏸ Admin intercedido — la IA no responde. Los mensajes del admin aparecen en dorado.</div></div>`;
     scrollTestBottom();
   } else if(d?.response){
     addTestBubble('assistant',d.response);
