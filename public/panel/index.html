@@ -5,538 +5,764 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gregory CRM · Feeling Vilanova</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --gold:        #bb9d6c;
-  --gold-light:  #d4b896;
-  --gold-dark:   #8a6f3e;
-  --gold-dim:    rgba(187,157,108,.11);
-  --gold-border: rgba(187,157,108,.26);
-  --gold-glow:   0 0 28px rgba(187,157,108,.16);
-
-  --bg:          #070707;
-  --surface:     #101010;
-  --surface-2:   #181818;
-  --surface-3:   #202020;
-
-  --text:        #f0e8d8;
-  --text-muted:  #7a7266;
-  --text-dim:    #3a3630;
-
-  --border:      rgba(255,255,255,.07);
-  --border-gold: rgba(187,157,108,.2);
-
-  --green:       #4ade80;
-  --green-bg:    rgba(74,222,128,.09);
-  --green-bd:    rgba(74,222,128,.22);
-  --red:         #f87171;
-  --red-bg:      rgba(248,113,113,.09);
-  --red-bd:      rgba(248,113,113,.22);
-  --orange:      #fb923c;
-  --orange-bg:   rgba(251,146,60,.09);
-  --orange-bd:   rgba(251,146,60,.22);
-  --blue:        #60a5fa;
-  --blue-bg:     rgba(96,165,250,.09);
-  --blue-bd:     rgba(96,165,250,.22);
-
-  --radius:      10px;
-  --font:        'Poppins', sans-serif;
-  --sidebar-w:   220px;
-}
+/* === RESET === */
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;-webkit-font-smoothing:antialiased}
-::-webkit-scrollbar{width:4px;height:4px}
+html,body{height:100vh;overflow:hidden}
+body{font-family:Manrope,sans-serif;background:#0a0907;color:#f3ead6;-webkit-font-smoothing:antialiased}
+textarea,input,select{font-family:Manrope,sans-serif}
+
+/* === ANIMATIONS === */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(111,207,151,.5)}70%{box-shadow:0 0 0 8px rgba(111,207,151,0)}100%{box-shadow:0 0 0 0 rgba(111,207,151,0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-5px);opacity:1}}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-thumb{background:rgba(232,200,116,.18);border-radius:7px}
+::-webkit-scrollbar-thumb:hover{background:rgba(232,200,116,.38)}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:4px}
+
+/* === UTIL === */
 .hidden{display:none!important}
 
-/* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:var(--radius);border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:var(--font);letter-spacing:.3px;transition:all .18s}
-.btn-gold{background:var(--gold);color:#080808}
-.btn-gold:hover{background:var(--gold-light);box-shadow:var(--gold-glow)}
-.btn-success{background:transparent;border:1.5px solid var(--green);color:var(--green)}
-.btn-success:hover{background:var(--green-bg)}
-.btn-danger{background:transparent;border:1.5px solid var(--red);color:var(--red)}
-.btn-danger:hover{background:var(--red-bg)}
-.btn-ghost{background:transparent;border:1.5px solid var(--border-gold);color:var(--text-muted)}
-.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.btn-sm{padding:6px 12px;font-size:12px}
+/* === LAYOUT === */
+#app{display:flex;height:100vh;overflow:hidden;
+  background:radial-gradient(1100px 600px at 78% -8%,rgba(232,200,116,.08),transparent 55%),
+             radial-gradient(800px 500px at -5% 108%,rgba(201,149,47,.06),transparent 50%),#0a0907}
+
+/* === SIDEBAR === */
+.sidebar{width:262px;flex:none;display:flex;flex-direction:column;padding:22px 16px;
+  background:linear-gradient(180deg,rgba(26,21,12,.96),rgba(12,10,7,.96));
+  border-right:1px solid rgba(232,200,116,.1)}
+.sb-brand{display:flex;align-items:center;gap:12px;padding:6px 8px 24px}
+.sb-logo{position:relative;width:42px;height:42px;flex:none;border-radius:13px;
+  background:linear-gradient(145deg,#f5d77a,#c9952f 60%,#8a6516);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(201,149,47,.35)}
+.sb-logo-letter{font-family:Sora,sans-serif;font-weight:800;font-size:20px;color:#1a1206;position:relative;z-index:1}
+.sb-logo-ring{position:absolute;inset:-4px;border:1px solid rgba(232,200,116,.35);border-radius:16px;
+  animation:spin 14s linear infinite;border-top-color:transparent;border-left-color:transparent}
+.sb-brand-text{line-height:1.2}
+.sb-brand-name{font-family:Sora,sans-serif;font-weight:700;font-size:16px;letter-spacing:.2px;color:#f3ead6}
+.sb-brand-sub{font-size:11.5px;color:#9a8e78;letter-spacing:.3px}
+
+.sb-section-label{font-size:10.5px;letter-spacing:1.6px;color:#776c5a;font-weight:700;padding:4px 10px 8px}
+.sb-nav{display:flex;flex-direction:column}
+.nav-item{position:relative;display:flex;align-items:center;gap:12px;width:100%;padding:11px 13px;margin-bottom:3px;
+  border:1px solid transparent;background:transparent;border-radius:12px;cursor:pointer;
+  font:600 14px Manrope,sans-serif;color:#9a8e78;transition:color .2s;user-select:none}
+.nav-item:hover{color:#f0d9a0}
+.nav-item.active{background:linear-gradient(90deg,rgba(232,200,116,.14),rgba(232,200,116,.02));
+  border-color:rgba(232,200,116,.22);color:#f3ead6}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:3px;height:54%;background:linear-gradient(#f5d77a,#c9952f);
+  border-radius:0 4px 4px 0;box-shadow:0 0 10px rgba(232,200,116,.55)}
+.nav-icon{display:flex;flex:none}
+.nav-badge{margin-left:auto;font-size:11px;font-weight:700;color:#1a1206;
+  background:linear-gradient(145deg,#f5d77a,#c9952f);padding:1px 8px;border-radius:20px}
+.nav-dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:#e8c874}
+
+.sb-bottom{margin-top:auto;padding:14px 16px;border-radius:16px;
+  background:linear-gradient(150deg,rgba(232,200,116,.08),rgba(232,200,116,.02));
+  border:1px solid rgba(232,200,116,.14)}
+.sb-status{display:flex;align-items:center;gap:9px}
+.sb-status-dot{width:9px;height:9px;border-radius:50%;background:#6fcf97;animation:pulse 2.4s infinite;flex:none}
+.sb-status-name{font-size:13px;font-weight:700;color:#f3ead6}
+.sb-status-sub{font-size:11.5px;color:#9a8e78;margin-top:6px;line-height:1.4}
+
+/* === MAIN === */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+
+/* === TOPBAR === */
+.topbar{flex:none;display:flex;align-items:center;gap:18px;padding:18px 30px;border-bottom:1px solid rgba(232,200,116,.08)}
+.topbar-heading h1{font-family:Sora,sans-serif;font-weight:700;font-size:21px;letter-spacing:.2px;color:#f3ead6}
+.topbar-heading p{font-size:13px;color:#9a8e78;margin-top:2px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.topbar-date{font-size:13px;color:#9a8e78;display:flex;align-items:center;gap:7px}
+.topbar-bell{position:relative;width:40px;height:40px;border-radius:11px;border:1px solid rgba(232,200,116,.12);
+  background:rgba(255,255,255,.03);color:#e8c874;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .2s}
+.topbar-bell:hover{background:rgba(232,200,116,.08)}
+.topbar-bell-dot{position:absolute;top:9px;right:10px;width:7px;height:7px;border-radius:50%;
+  background:#e06b6b;border:2px solid #0a0907;display:none}
+.topbar-user{display:flex;align-items:center;gap:10px;padding:5px 5px 5px 14px;border-radius:30px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(232,200,116,.12)}
+.topbar-user-info{line-height:1.15;text-align:right}
+.topbar-user-name{font-size:12.5px;font-weight:700;color:#f3ead6}
+.topbar-user-role{font-size:10.5px;color:#9a8e78}
+.topbar-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,#3a2f1a,#1a1206);
+  border:1px solid rgba(232,200,116,.3);display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:#e8c874;font-family:Sora,sans-serif}
+
+/* === CONTENT === */
+.content{flex:1;overflow:hidden;position:relative}
+
+/* === TAB PANELS === */
+.tab-panel{height:100%;overflow-y:auto;padding:26px 30px 40px;display:none;animation:fadeUp .4s cubic-bezier(.2,.7,.2,1) both}
+.tab-panel.active{display:block}
+.tab-panel.split{padding:0;height:100%;display:none;flex-direction:column}
+.tab-panel.split.active{display:flex}
+#tab-test{padding:0;height:100%;display:none}
+#tab-test.active{display:flex;padding:24px 28px;gap:22px;flex-direction:row;animation:fadeIn .4s both}
+
+/* === HERO CARD === */
+.hero-card{position:relative;overflow:hidden;display:flex;align-items:center;gap:26px;padding:26px 30px;
+  border-radius:22px;background:linear-gradient(120deg,rgba(232,200,116,.14),rgba(201,149,47,.04) 45%,rgba(255,255,255,.02));
+  border:1px solid rgba(232,200,116,.2);margin-bottom:22px}
+.hero-ring1{position:absolute;right:-40px;top:-40px;width:220px;height:220px;border-radius:50%;
+  border:1px solid rgba(232,200,116,.15);animation:spin 22s linear infinite;border-top-color:transparent}
+.hero-ring2{position:absolute;right:10px;top:10px;width:140px;height:140px;border-radius:50%;
+  border:1px solid rgba(232,200,116,.08);animation:spin 16s linear infinite reverse;border-bottom-color:transparent}
+.hero-icon{position:relative;width:64px;height:64px;flex:none;border-radius:20px;
+  background:linear-gradient(145deg,#f5d77a,#c9952f 65%,#8a6516);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(201,149,47,.4)}
+.hero-body{position:relative;flex:1}
+.hero-title{font-family:Sora,sans-serif;font-size:20px;font-weight:700;color:#f3ead6}
+.hero-sub{font-size:14px;color:#cdbf9f;margin-top:5px;max-width:540px;line-height:1.5}
+.hero-sub b{color:#e8c874}
+.hero-sub b.white{color:#f3ead6}
+
+/* === KPI CARDS === */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
+.stat-card{padding:22px;border-radius:18px;background:linear-gradient(180deg,#17130b,#100d08);
+  border:1px solid rgba(232,200,116,.12);transition:transform .25s,border-color .25s}
+.stat-card:hover{transform:translateY(-4px);border-color:rgba(232,200,116,.3)}
+.stat-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.stat-label{font-size:13px;color:#9a8e78;font-weight:600}
+.stat-icon{color:#e8c874}
+.stat-value{font-family:Sora,sans-serif;font-size:34px;font-weight:800;line-height:1;color:#f3ead6}
+.stat-value.gold{color:#e8c874}
+.stat-value.green{color:#7fe0a3}
+.stat-value.orange{color:#f0b07a}
+.stat-sub{font-size:12px;margin-top:8px;font-weight:600;color:#9a8e78}
+.stat-sub.up{color:#7fe0a3}
+.stat-sub.warn{color:#f0d28a}
+
+/* === SECTION CARDS === */
+.section-card{border-radius:18px;background:linear-gradient(180deg,#17130b,#100d08);border:1px solid rgba(232,200,116,.12);margin-bottom:16px;overflow:hidden}
+.section-hdr{padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
+.section-hdr-title{font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:#f3ead6}
+.section-body{padding:0 22px 18px}
+
+/* === 2-COL === */
+.two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+
+/* === FILTER BAR === */
+.filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.ftab{padding:9px 18px;border-radius:11px;cursor:pointer;font:600 13px Manrope,sans-serif;
+  border:1px solid rgba(232,200,116,.15);background:transparent;color:#9a8e78;transition:all .2s}
+.ftab:hover:not(.active){border-color:rgba(232,200,116,.3);color:#f3ead6}
+.ftab.active{background:rgba(232,200,116,.1);border-color:rgba(232,200,116,.4);color:#e8c874}
+.search-box{position:relative;margin-left:auto}
+.search-box input{background:rgba(255,255,255,.03);border:1px solid rgba(232,200,116,.15);border-radius:11px;
+  padding:9px 14px;font:13px Manrope,sans-serif;color:#f3ead6;outline:none;width:210px;transition:border-color .2s}
+.search-box input:focus{border-color:rgba(232,200,116,.4)}
+.search-box input::placeholder{color:#6b6356}
+
+/* === TABLE === */
+.table-wrap{overflow-x:auto}
+.res-table{width:100%;border-collapse:collapse;font-size:13px}
+.res-table th{text-align:left;padding:13px 16px;font-size:10.5px;letter-spacing:1px;
+  color:#776c5a;font-weight:700;text-transform:uppercase;border-bottom:1px solid rgba(232,200,116,.1)}
+.res-table td{padding:13px 16px;border-bottom:1px solid rgba(232,200,116,.05);vertical-align:middle;color:#f3ead6}
+.res-table tr:last-child td{border-bottom:none}
+.res-table tr:hover td{background:rgba(232,200,116,.03)}
+.td-actions{display:flex;gap:6px;white-space:nowrap}
+.ini-badge{width:38px;height:38px;flex:none;border-radius:11px;
+  background:linear-gradient(145deg,#3a2f1a,#1a1206);border:1px solid rgba(232,200,116,.22);
+  display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;
+  color:#e8c874;font-family:Sora,sans-serif}
+
+/* === PILLS === */
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;white-space:nowrap}
+.pill-pending{color:#e8c874;background:rgba(232,200,116,.1);border:1px solid rgba(232,200,116,.28)}
+.pill-confirmed{color:#7fe0a3;background:rgba(111,207,151,.1);border:1px solid rgba(111,207,151,.28)}
+.pill-cancelled{color:#ef9a9a;background:rgba(224,107,107,.1);border:1px solid rgba(224,107,107,.28)}
+.pill-admin{color:#f0b07a;background:rgba(240,176,122,.1);border:1px solid rgba(240,176,122,.28)}
+.pill-active{color:#7fe0a3;background:rgba(111,207,151,.1);border:1px solid rgba(111,207,151,.28)}
+.pill-completed{color:#9a8e78;background:rgba(154,142,120,.08);border:1px solid rgba(154,142,120,.2)}
+
+/* === BUTTONS === */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 18px;
+  border-radius:11px;border:none;cursor:pointer;font:700 13px Manrope,sans-serif;transition:all .2s}
+.btn-gold{background:linear-gradient(145deg,#f5d77a,#c9952f);color:#1a1206;box-shadow:0 6px 16px rgba(201,149,47,.28)}
+.btn-gold:hover{opacity:.92;box-shadow:0 8px 22px rgba(201,149,47,.44)}
+.btn-success{background:transparent;border:1px solid rgba(111,207,151,.35);color:#7fe0a3}
+.btn-success:hover{background:rgba(111,207,151,.1)}
+.btn-danger{background:transparent;border:1px solid rgba(224,107,107,.35);color:#ef9a9a}
+.btn-danger:hover{background:rgba(224,107,107,.1)}
+.btn-ghost{background:transparent;border:1px solid rgba(232,200,116,.2);color:#9a8e78}
+.btn-ghost:hover{border-color:rgba(232,200,116,.5);color:#e8c874;background:rgba(232,200,116,.06)}
+.btn-sm{padding:7px 13px;font-size:12px;border-radius:9px}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 
-/* ── INPUT ── */
-.input,.select,.textarea{width:100%;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;font-family:var(--font);color:var(--text);outline:none;transition:border-color .18s}
-.input:focus,.select:focus,.textarea:focus{border-color:var(--gold)}
-.input::placeholder,.textarea::placeholder{color:var(--text-dim)}
+/* === INPUTS === */
+.input,.select,.textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(232,200,116,.22);
+  border-radius:12px;padding:12px 15px;font-size:14px;font-family:Manrope,sans-serif;color:#f3ead6;
+  outline:none;transition:border-color .2s}
+.input:focus,.select:focus,.textarea:focus{border-color:rgba(232,200,116,.55)}
+.input::placeholder,.textarea::placeholder{color:#6b6356}
 .select{appearance:none;cursor:pointer}
-.textarea{resize:vertical}
+.textarea{resize:vertical;line-height:1.5}
+.form-label{display:block;font-size:12.5px;color:#9a8e78;font-weight:600;margin-bottom:7px}
+.form-hint{font-size:12px;color:#776c5a;margin-top:5px}
+.form-group{margin-bottom:18px}
 
-/* ── LOGIN ── */
-#login{display:flex;align-items:center;justify-content:center;height:100vh;background:radial-gradient(ellipse at 50% 40%,#1a1208 0%,#070707 65%)}
-.login-card{text-align:center;padding:52px 44px;width:360px;background:var(--surface);border:1px solid var(--border-gold);border-radius:18px;box-shadow:var(--gold-glow),0 32px 64px rgba(0,0,0,.55)}
-.login-brand{font-family:'Dancing Script',cursive;font-size:38px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
-.login-sub{font-size:11px;font-weight:600;color:var(--text-dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
-.login-div{width:36px;height:1px;background:var(--border-gold);margin:18px auto 24px}
-.login-label{font-size:11px;color:var(--text-muted);margin-bottom:20px;letter-spacing:.5px;text-transform:uppercase}
-#login-error{color:var(--red);font-size:12px;margin-top:10px;display:none}
+/* === LOGIN === */
+#login{display:flex;align-items:center;justify-content:center;height:100vh;
+  background:radial-gradient(ellipse at 50% 38%,rgba(201,149,47,.12),#0a0907 65%)}
+.login-card{text-align:center;padding:52px 44px;width:380px;
+  background:linear-gradient(180deg,#17130b,#100d08);
+  border:1px solid rgba(232,200,116,.2);border-radius:22px;
+  box-shadow:0 0 60px rgba(201,149,47,.1),0 32px 64px rgba(0,0,0,.55)}
+.login-logo{width:64px;height:64px;border-radius:20px;
+  background:linear-gradient(145deg,#f5d77a,#c9952f 65%,#8a6516);
+  display:flex;align-items:center;justify-content:center;
+  font-family:Sora,sans-serif;font-weight:800;font-size:28px;color:#1a1206;
+  margin:0 auto 20px;box-shadow:0 10px 30px rgba(201,149,47,.4)}
+.login-title{font-family:Sora,sans-serif;font-size:22px;font-weight:700;color:#f3ead6}
+.login-subtitle{font-size:13px;color:#9a8e78;margin-top:4px}
+.login-divider{width:40px;height:1px;background:rgba(232,200,116,.2);margin:22px auto}
+.login-label{font-size:12px;color:#9a8e78;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+#login-error{color:#ef9a9a;font-size:13px;margin-top:10px;display:none}
 
-/* ── LAYOUT ── */
-#app{display:flex;height:100vh}
-
-/* ── SIDEBAR ── */
-.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
-.sb-brand{padding:20px 16px 16px;border-bottom:1px solid var(--border)}
-.sb-brand-name{font-family:'Dancing Script',cursive;font-size:22px;color:var(--gold);line-height:1}
-.sb-brand-sub{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
-.sb-nav{flex:1;padding:10px 8px;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;cursor:pointer;margin-bottom:2px;border:1px solid transparent;transition:all .18s;color:var(--text-muted);font-size:13px;font-weight:500;user-select:none}
-.nav-item:hover{background:var(--surface-2);color:var(--text)}
-.nav-item.active{background:var(--gold-dim);border-color:var(--border-gold);color:var(--gold)}
-.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
-.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px;min-width:18px;text-align:center}
-.sb-bottom{padding:12px 8px;border-top:1px solid var(--border)}
-.sb-bottom .nav-item{color:var(--text-dim)}
-.sb-bottom .nav-item:hover{color:var(--red)}
-
-/* ── MAIN ── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
-
-/* ── TOP BAR ── */
-.topbar{height:48px;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--surface)}
-.topbar-title{font-size:14px;font-weight:700;color:var(--text)}
-.topbar-meta{font-size:11px;color:var(--text-muted)}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.status-dot-live{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);display:inline-block}
-
-/* ── TAB PANELS ── */
-.tab-panel{flex:1;overflow-y:auto;padding:24px;display:none}
-.tab-panel.active{display:block}
-.tab-panel.no-pad{padding:0;display:none}
-.tab-panel.no-pad.active{display:flex;flex-direction:column}
-
-/* ── PAGE HEADER ── */
-.page-header{margin-bottom:24px}
-.page-header h1{font-size:20px;font-weight:700;color:var(--text)}
-.page-header p{font-size:12px;color:var(--text-muted);margin-top:3px}
-
-/* ── STAT CARDS ── */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
-.stat-card.gold{border-color:var(--border-gold);background:var(--gold-dim)}
-.stat-label{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px}
-.stat-value{font-size:30px;font-weight:700;color:var(--text);line-height:1}
-.stat-value.gold{color:var(--gold)}
-.stat-value.green{color:var(--green)}
-.stat-value.red{color:var(--red)}
-.stat-value.orange{color:var(--orange)}
-.stat-sub{font-size:11px;color:var(--text-muted);margin-top:5px}
-
-/* ── SECTION CARD ── */
-.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
-.section-card-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.section-card-header h3{font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px}
-.section-card-body{padding:14px 18px}
-
-/* ── TABLE ── */
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;padding:10px 14px;font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);white-space:nowrap}
-td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(255,255,255,.02)}
-.td-actions{display:flex;gap:6px;white-space:nowrap}
-
-/* ── PILLS ── */
-.pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;letter-spacing:.3px;white-space:nowrap}
-.pill-pending{background:rgba(187,157,108,.12);color:var(--gold);border:1px solid var(--border-gold)}
-.pill-confirmed{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
-.pill-cancelled{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
-.pill-admin{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-bd)}
-.pill-active{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
-.pill-completed{background:rgba(255,255,255,.05);color:var(--text-muted);border:1px solid var(--border)}
-
-/* ── FILTER BAR ── */
-.filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.ftab{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);color:var(--text-muted);transition:all .15s}
-.ftab.active{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
-.ftab:hover:not(.active){border-color:rgba(255,255,255,.15);color:var(--text)}
-.search-box{position:relative}
-.search-box input{background:var(--surface-2);border:1.5px solid var(--border);border-radius:9px;padding:7px 12px 7px 32px;font-size:12px;font-family:var(--font);color:var(--text);outline:none;width:200px;transition:border-color .18s}
-.search-box input:focus{border-color:var(--gold)}
-.search-box input::placeholder{color:var(--text-dim)}
-.search-box::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px;pointer-events:none}
-
-/* ── HISTORIAL SPLIT VIEW ── */
+/* === SPLIT VIEWS === */
 .historial-wrap{flex:1;display:flex;overflow:hidden}
-.hlist{width:280px;border-right:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;background:var(--surface)}
-.hlist-header{padding:14px;border-bottom:1px solid var(--border)}
-.hlist-header h3{font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
-.hlist-search input{width:100%;background:var(--surface-2);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;font-family:var(--font);color:var(--text);outline:none;transition:border-color .18s}
-.hlist-search input:focus{border-color:var(--gold)}
-.hlist-search input::placeholder{color:var(--text-dim)}
-.hlist-body{flex:1;overflow-y:auto;padding:6px}
-.hcard{padding:12px;border-radius:9px;cursor:pointer;margin-bottom:2px;border:1px solid transparent;transition:all .15s}
-.hcard:hover{background:var(--surface-2)}
-.hcard.sel{background:var(--gold-dim);border-color:var(--border-gold)}
-.hcard.s-needs_confirmation{border-color:var(--border-gold);background:rgba(187,157,108,.06)}
-.hcard.s-admin_mode{background:var(--orange-bg);border-color:var(--orange-bd)}
-.hcard-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
-.hcard-name{font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
-.hcard-time{font-size:11px;color:var(--text-dim);flex-shrink:0}
+.hlist{width:330px;flex:none;border-right:1px solid rgba(232,200,116,.1);display:flex;flex-direction:column}
+.hlist-header{padding:18px 16px 12px}
+.hlist-search{display:flex;align-items:center;gap:9px;padding:10px 14px;border-radius:11px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(232,200,116,.1)}
+.hlist-search input{flex:1;background:none;border:none;outline:none;font:13px Manrope,sans-serif;color:#f3ead6}
+.hlist-search input::placeholder{color:#6b6356}
+.hlist-body{flex:1;overflow-y:auto;padding:0 10px 14px}
 
-/* ── CHAT DETAIL ── */
+.hcard{display:flex;gap:12px;padding:13px 12px;margin-bottom:4px;
+  border:1px solid rgba(232,200,116,.07);background:rgba(23,19,11,.5);
+  border-radius:14px;cursor:pointer;transition:all .2s}
+.hcard:hover{border-color:rgba(232,200,116,.25)}
+.hcard.sel{border-color:rgba(232,200,116,.35);background:rgba(232,200,116,.06)}
+.hcard.s-needs_confirmation{border-color:rgba(232,200,116,.28);background:rgba(232,200,116,.05)}
+.hcard.s-admin_mode{border-color:rgba(240,176,122,.3);background:rgba(240,176,122,.05)}
+.hcard-av{position:relative;width:44px;height:44px;flex:none;border-radius:13px;
+  background:linear-gradient(145deg,#3a2f1a,#1a1206);border:1px solid rgba(232,200,116,.22);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#e8c874;font-family:Sora,sans-serif}
+.hcard-av-dot{position:absolute;bottom:-1px;right:-1px;width:11px;height:11px;border-radius:50%;border:2px solid #100d08}
+.hcard-body{flex:1;min-width:0}
+.hcard-top{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.hcard-name{font-size:13.5px;font-weight:700;color:#f3ead6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.hcard-time{font-size:11px;color:#9a8e78;flex:none}
+.hcard-res{font-size:11px;color:#e8c874;font-weight:600}
+
+/* === CHAT DETAIL === */
 .hdetail{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.hdetail-ph{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-dim);gap:8px}
-.hdetail-ph-brand{font-family:'Dancing Script',cursive;font-size:28px;color:var(--gold);opacity:.25}
-.hdetail-ph-sub{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;opacity:.3}
-.chat-hdr{padding:12px 20px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
-.chat-client h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
-.chat-client p{font-size:11px;color:var(--text-muted)}
-.chat-acts{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.res-card-inner{background:var(--gold-dim);border:1px solid var(--border-gold);border-radius:var(--radius);margin:12px 16px;padding:14px;flex-shrink:0}
-.res-card-inner h4{font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
-.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin-bottom:12px}
-.res-field .flabel{font-size:10px;color:var(--text-dim);margin-bottom:1px;text-transform:uppercase;letter-spacing:.5px}
-.res-field .fvalue{font-size:13px;font-weight:600;color:var(--text)}
-.res-btns{display:flex;gap:6px}
-.msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:9px;background:var(--bg)}
-.msg{max-width:74%}
+.hdetail-ph{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.hdetail-ph-logo{font-family:Sora,sans-serif;font-size:52px;font-weight:800;color:rgba(232,200,116,.12)}
+.hdetail-ph-sub{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#3a352e}
+
+.chat-hdr{flex:none;display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:1px solid rgba(232,200,116,.1)}
+.chat-hdr-av{width:46px;height:46px;border-radius:14px;background:linear-gradient(145deg,#3a2f1a,#1a1206);
+  border:1px solid rgba(232,200,116,.25);display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;color:#e8c874;font-family:Sora,sans-serif;flex:none}
+.chat-hdr-info h3{font-size:15px;font-weight:700;color:#f3ead6}
+.chat-hdr-info p{font-size:12px;color:#9a8e78;margin-top:2px}
+.chat-hdr-acts{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
+
+.msgs{flex:1;overflow-y:auto;padding:22px 24px;display:flex;flex-direction:column;gap:13px;
+  background:radial-gradient(600px 400px at 50% 0,rgba(232,200,116,.03),transparent)}
+.msg{display:flex;flex-direction:column;max-width:72%}
 .msg-user{align-self:flex-end}
 .msg-assistant,.msg-admin{align-self:flex-start}
-.bubble{padding:10px 13px;border-radius:13px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
-.msg-user .bubble{background:var(--gold-dim);border:1px solid var(--border-gold);border-bottom-right-radius:3px}
-.msg-assistant .bubble{background:var(--surface-2);border:1px solid var(--border);border-bottom-left-radius:3px}
-.msg-admin .bubble{background:var(--blue-bg);border:1px solid var(--blue-bd);border-bottom-left-radius:3px}
-.msg-label{font-size:10px;font-weight:700;color:var(--gold);margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
-.msg-admin .msg-label{color:var(--blue)}
-.msg-time{font-size:11px;color:var(--text-dim);margin-top:3px}
+.msg-who{font-size:10.5px;font-weight:700;letter-spacing:.5px;margin-bottom:5px;padding:0 4px;text-transform:uppercase}
+.msg-user .msg-who{color:#e8c874;text-align:right}
+.msg-assistant .msg-who{color:#9a8e78}
+.msg-admin .msg-who{color:#7fe0a3}
+.bubble{padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.55;font-weight:500;word-break:break-word;white-space:pre-wrap}
+.msg-user .bubble{background:rgba(232,200,116,.12);border:1px solid rgba(232,200,116,.25);border-bottom-right-radius:4px;color:#f3ead6}
+.msg-assistant .bubble{background:rgba(255,255,255,.04);border:1px solid rgba(232,200,116,.08);border-bottom-left-radius:4px;color:#f3ead6}
+.msg-admin .bubble{background:rgba(111,207,151,.08);border:1px solid rgba(111,207,151,.2);border-bottom-left-radius:4px;color:#b8edcc}
+.msg-label{font-size:10.5px;font-weight:700;letter-spacing:.5px;margin-bottom:5px;padding:0 4px;text-transform:uppercase;color:#9a8e78}
+.msg-time{font-size:10.5px;color:#776c5a;margin-top:5px;padding:0 4px}
 .msg-user .msg-time{text-align:right}
-.admin-bar{padding:10px 16px;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
-.admin-bar textarea{flex:1;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 13px;font-size:13px;font-family:var(--font);color:var(--text);resize:none;outline:none;max-height:100px;transition:border-color .18s}
-.admin-bar textarea:focus{border-color:var(--gold)}
-.admin-bar textarea::placeholder{color:var(--text-dim)}
 
-/* ── MÉTRICAS ── */
-.period-sel{display:flex;gap:6px;margin-bottom:20px}
-.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px}
-.chart-title{font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.bar-label{font-size:12px;color:var(--text-muted);width:90px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bar-track{flex:1;background:var(--surface-2);border-radius:4px;height:7px;overflow:hidden}
-.bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
-.bar-count{font-size:12px;font-weight:700;min-width:22px;text-align:right}
-.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
-.metric-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
-.metric-stat .ms-val{font-size:28px;font-weight:700;color:var(--gold)}
-.metric-stat .ms-label{font-size:11px;color:var(--text-muted);margin-top:4px}
+.res-card-inner{background:rgba(232,200,116,.06);border:1px solid rgba(232,200,116,.18);
+  border-radius:14px;margin:14px 24px;padding:16px;flex-shrink:0}
+.res-card-inner h4{font-size:10px;font-weight:700;color:#e8c874;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin-bottom:14px}
+.res-field .flabel{font-size:10px;color:#776c5a;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+.res-field .fvalue{font-size:13px;font-weight:600;color:#f3ead6}
+.res-btns{display:flex;gap:8px}
+
+.admin-bar{flex:none;padding:14px 24px;border-top:1px solid rgba(232,200,116,.1);display:flex;gap:10px;align-items:flex-end}
+.admin-bar textarea{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(232,200,116,.22);
+  border-radius:13px;padding:12px 15px;font:14px Manrope,sans-serif;color:#f3ead6;
+  resize:none;outline:none;max-height:100px;transition:border-color .2s}
+.admin-bar textarea:focus{border-color:rgba(232,200,116,.5)}
+.admin-bar textarea::placeholder{color:#6b6356}
+
+.paused-banner{display:flex;align-items:center;gap:9px;margin:14px 24px 0;padding:11px 16px;
+  border-radius:12px;background:rgba(224,107,107,.1);border:1px solid rgba(224,107,107,.22);
+  color:#ef9a9a;font-size:13px;font-weight:600;flex-shrink:0}
+
+/* === CLIENTES === */
+.cli-detail{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.cli-stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(232,200,116,.1);flex-shrink:0}
+.cli-stat{padding:18px 16px;text-align:center;border-right:1px solid rgba(232,200,116,.08)}
+.cli-stat:last-child{border-right:none}
+.cli-stat-val{font-family:Sora,sans-serif;font-size:24px;font-weight:800;color:#e8c874}
+.cli-stat-lbl{font-size:10px;color:#776c5a;text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+.cli-res-list{flex:1;overflow-y:auto;padding:18px 24px}
+.cli-res-item{border-radius:14px;background:linear-gradient(180deg,rgba(23,19,11,.8),rgba(16,13,8,.8));
+  border:1px solid rgba(232,200,116,.08);padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:16px}
+.cli-res-date{font-size:14px;font-weight:700;color:#e8c874;min-width:90px;font-family:Sora,sans-serif}
+.cli-res-info{flex:1}
+.cli-res-info strong{font-size:13.5px;font-weight:700;color:#f3ead6;display:block}
+.cli-res-info p{font-size:12.5px;color:#9a8e78;margin-top:2px}
+
+/* === MÉTRICAS === */
+.period-sel{display:flex;gap:8px;margin-bottom:22px}
+.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.metric-stat{padding:20px;border-radius:16px;background:linear-gradient(180deg,#17130b,#100d08);border:1px solid rgba(232,200,116,.12)}
+.metric-val{font-family:Sora,sans-serif;font-size:30px;font-weight:800;margin-top:6px;color:#f3ead6}
+.metric-val.gold{color:#e8c874}
+.metric-val.green{color:#7fe0a3}
+.metric-val.red{color:#ef9a9a}
+.metric-val.orange{color:#f0b07a}
+.metric-label{font-size:12.5px;color:#9a8e78;font-weight:600}
+.chart-wrap{border-radius:18px;background:linear-gradient(180deg,#17130b,#100d08);border:1px solid rgba(232,200,116,.12);padding:22px;margin-bottom:16px}
+.chart-title{font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:#f3ead6;margin-bottom:18px}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.bar-label{font-size:12.5px;color:#9a8e78;width:100px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;background:rgba(255,255,255,.05);border-radius:6px;height:8px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease}
+.bar-count{font-size:12.5px;font-weight:700;min-width:24px;text-align:right}
 .freq-table{width:100%;border-collapse:collapse;font-size:13px}
-.freq-table th{text-align:left;padding:8px 12px;font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border)}
-.freq-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text)}
+.freq-table th{text-align:left;padding:10px 14px;font-size:10.5px;letter-spacing:.8px;color:#776c5a;font-weight:700;text-transform:uppercase;border-bottom:1px solid rgba(232,200,116,.1)}
+.freq-table td{padding:10px 14px;border-bottom:1px solid rgba(232,200,116,.05);color:#f3ead6}
 .freq-table tr:last-child td{border-bottom:none}
 
-/* ── TEST CHAT ── */
-.test-hdr{background:var(--surface);border-bottom:1px solid var(--border-gold);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.test-avatar{width:38px;height:38px;border-radius:50%;background:var(--gold-dim);border:1.5px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-family:'Dancing Script',cursive;font-size:20px;color:var(--gold);overflow:hidden}
-.test-hdr-info{display:flex;align-items:center;gap:12px}
-.test-hdr h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:1px}
-.test-hdr p{font-size:11px;color:var(--text-muted)}
-#test-messages{flex:1;overflow-y:auto;padding:20px;background:var(--bg);display:flex;flex-direction:column;gap:10px}
-.tmsg{max-width:72%;word-break:break-word}
-.tmsg-user{align-self:flex-end}
-.tmsg-agent{align-self:flex-start}
-.tbubble{padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.6;white-space:pre-wrap}
-.tmsg-user .tbubble{background:var(--gold-dim);border:1px solid var(--border-gold);border-bottom-right-radius:4px}
-.tmsg-agent .tbubble{background:var(--surface-2);border:1px solid var(--border);border-bottom-left-radius:4px}
-.tmsg-label{font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
-.ttime{font-size:11px;color:var(--text-dim);margin-top:4px}
-.tmsg-user .ttime{text-align:right}
-.ttyping .tbubble{padding:12px 16px}
-.tdots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin:0 2px;animation:tdot 1.2s infinite}
+/* === TEST CHAT === */
+.test-panel{flex:1;min-width:0;display:flex;flex-direction:column;border-radius:22px;
+  background:linear-gradient(180deg,#17130b,#100d08);border:1px solid rgba(232,200,116,.14);overflow:hidden}
+.test-hdr{flex:none;display:flex;align-items:center;gap:13px;padding:16px 22px;
+  border-bottom:1px solid rgba(232,200,116,.1);background:linear-gradient(90deg,rgba(232,200,116,.06),transparent)}
+.test-av-wrap{position:relative;width:44px;height:44px;border-radius:13px;
+  background:linear-gradient(145deg,#f5d77a,#c9952f);display:flex;align-items:center;justify-content:center;flex:none}
+.test-av-dot{position:absolute;bottom:-1px;right:-1px;width:12px;height:12px;border-radius:50%;background:#6fcf97;border:2px solid #110d08}
+#test-av{font-family:Sora,sans-serif;font-size:18px;font-weight:800;color:#1a1206;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:13px}
+.test-hdr-info h3{font-size:15px;font-weight:700;color:#f3ead6}
+.test-hdr-badge{font-size:10px;font-weight:700;color:#1a1206;background:#e8c874;padding:1px 8px;border-radius:20px;margin-left:8px}
+.test-hdr-info p{font-size:12px;color:#9a8e78}
+#test-messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;
+  background:radial-gradient(600px 400px at 50% 0,rgba(232,200,116,.04),transparent)}
+.tmsg{display:flex;margin-bottom:14px;animation:fadeUp .35s both}
+.tmsg-user{justify-content:flex-end}
+.tmsg-agent,.tmsg-admin{justify-content:flex-start}
+.tbubble{max-width:74%;padding:12px 16px;border-radius:17px;font-size:14px;line-height:1.5;font-weight:500;word-break:break-word;white-space:pre-wrap}
+.tmsg-user .tbubble{background:rgba(232,200,116,.12);border:1px solid rgba(232,200,116,.25);border-bottom-right-radius:4px;color:#f3ead6}
+.tmsg-agent .tbubble{background:rgba(255,255,255,.04);border:1px solid rgba(232,200,116,.08);border-bottom-left-radius:4px;color:#f3ead6}
+.tmsg-admin .tbubble{background:rgba(232,200,116,.1);border:1px solid rgba(232,200,116,.22);color:#f0d9a0}
+.ttyping .tbubble{padding:14px 18px}
+.ttime{font-size:10.5px;color:#776c5a;margin-top:5px;padding:0 4px}
+.tmsg-label{font-size:10.5px;color:#9a8e78;margin-bottom:4px;padding:0 4px}
+.tdots span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e8c874;margin:0 2px;animation:tdot 1.2s infinite}
 .tdots span:nth-child(2){animation-delay:.2s}
 .tdots span:nth-child(3){animation-delay:.4s}
-@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
-.test-input-bar{background:var(--surface);border-top:1px solid var(--border-gold);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-#test-input{flex:1;background:var(--surface-2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:14px;font-family:var(--font);color:var(--text);outline:none;resize:none;max-height:100px;transition:border-color .18s}
-#test-input:focus{border-color:var(--gold)}
-#test-input::placeholder{color:var(--text-dim)}
-.test-send{width:40px;height:40px;border-radius:10px;border:none;background:var(--gold);color:#080808;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .18s;font-weight:700;flex-shrink:0}
-.test-send:hover{background:var(--gold-light);box-shadow:var(--gold-glow)}
-.test-send:disabled{background:var(--text-dim);cursor:not-allowed;box-shadow:none}
+.test-input-bar{flex:none;padding:14px 22px 18px;border-top:1px solid rgba(232,200,116,.1)}
+#test-input{width:100%;padding:13px 16px;border-radius:14px;border:1px solid rgba(232,200,116,.25);
+  background:rgba(255,255,255,.04);color:#f3ead6;font:14px Manrope,sans-serif;
+  outline:none;resize:none;max-height:100px;transition:border-color .2s;display:block}
+#test-input:focus{border-color:rgba(232,200,116,.5)}
+#test-input::placeholder{color:#6b6356}
+.test-input-row{display:flex;gap:10px;align-items:center;margin-top:10px}
+.test-send{width:48px;height:48px;border-radius:14px;border:none;cursor:pointer;
+  background:linear-gradient(145deg,#f5d77a,#c9952f);color:#1a1206;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 16px rgba(201,149,47,.32);flex:none;transition:opacity .2s}
+.test-send:hover{opacity:.9}
+.test-send:disabled{opacity:.35;cursor:not-allowed}
 
-/* ── AJUSTES ── */
-.settings-form{max-width:560px}
-.form-group{margin-bottom:20px}
-.form-label{display:block;font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.form-hint{font-size:11px;color:var(--text-muted);margin-top:5px}
-.avatar-preview{width:60px;height:60px;border-radius:50%;background:var(--surface-2);border:2px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-family:'Dancing Script',cursive;font-size:26px;color:var(--gold);margin-bottom:12px;overflow:hidden}
+.test-sidebar{width:276px;flex:none;display:flex;flex-direction:column;gap:16px}
+.test-config{padding:22px;border-radius:18px;background:linear-gradient(180deg,#17130b,#100d08);border:1px solid rgba(232,200,116,.12)}
+.test-config h3{font-family:Sora,sans-serif;font-size:15px;font-weight:700;color:#f3ead6;margin-bottom:16px}
+.test-config-row{margin-bottom:14px}
+.test-cfg-label{font-size:11.5px;color:#9a8e78;margin-bottom:3px}
+.test-cfg-val{font-size:13.5px;font-weight:700;color:#e8c874}
+.test-cfg-val.normal{color:#f3ead6;font-weight:600}
+.test-tip{padding:18px;border-radius:16px;background:linear-gradient(150deg,rgba(232,200,116,.1),rgba(232,200,116,.02));border:1px solid rgba(232,200,116,.16)}
+.test-tip-title{font-size:13px;font-weight:700;color:#e8c874;margin-bottom:7px}
+.test-tip-body{font-size:13px;color:#cdbf9f;line-height:1.55}
+
+/* === AJUSTES === */
+.settings-section{padding:24px;border-radius:18px;background:linear-gradient(180deg,#17130b,#100d08);border:1px solid rgba(232,200,116,.12);margin-bottom:18px}
+.settings-section-title{font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:#f3ead6;margin-bottom:4px}
+.settings-section-sub{font-size:13px;color:#9a8e78;margin-bottom:20px}
+.avatar-preview{width:62px;height:62px;border-radius:50%;background:linear-gradient(145deg,#3a2f1a,#1a1206);
+  border:2px solid rgba(232,200,116,.3);display:flex;align-items:center;justify-content:center;
+  font-family:Sora,sans-serif;font-size:24px;font-weight:700;color:#e8c874;margin-bottom:16px;overflow:hidden}
 .avatar-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.save-row{display:flex;align-items:center;gap:12px;padding-top:8px}
-.save-ok{font-size:13px;font-weight:600;color:var(--green);display:none}
+.save-row{display:flex;align-items:center;gap:14px;padding-top:4px}
+.save-ok{font-size:13px;font-weight:700;color:#7fe0a3;display:none;animation:popIn .3s both}
 
-/* ── MODALS ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;z-index:300;padding:20px;backdrop-filter:blur(4px)}
-.modal{background:var(--surface);border:1px solid var(--border-gold);border-radius:16px;width:100%;max-width:480px;box-shadow:var(--gold-glow),0 32px 64px rgba(0,0,0,.55);overflow:hidden}
-.modal-hd{padding:22px 24px 0}
-.modal-hd h3{font-size:16px;font-weight:700;color:var(--text)}
-.modal-hd p{color:var(--text-muted);font-size:12px;margin-top:4px}
-.modal-bd{padding:18px 24px}
-.modal-ft{padding:0 24px 20px;display:flex;gap:8px;justify-content:flex-end}
-.mfield{margin-bottom:14px}
-.mfield label{display:block;font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+/* === MODALS === */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:300;padding:20px;backdrop-filter:blur(6px)}
+.modal{background:linear-gradient(180deg,#1e1810,#131009);border:1px solid rgba(232,200,116,.2);border-radius:20px;width:100%;max-width:500px;box-shadow:0 0 60px rgba(201,149,47,.1),0 32px 64px rgba(0,0,0,.6);overflow:hidden;animation:popIn .25s both}
+.modal-hd{padding:24px 26px 0}
+.modal-hd h3{font-family:Sora,sans-serif;font-size:18px;font-weight:700;color:#f3ead6}
+.modal-hd p{color:#9a8e78;font-size:13px;margin-top:4px}
+.modal-bd{padding:20px 26px}
+.modal-ft{padding:0 26px 22px;display:flex;gap:10px;justify-content:flex-end}
+.mfield{margin-bottom:16px}
+.mfield label{display:block;font-size:11px;font-weight:700;color:#776c5a;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
 .mfield .textarea{min-height:80px}
-.res-summary{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.9;color:var(--text-muted);margin-bottom:14px;white-space:pre-wrap}
-.warn-box{background:var(--red-bg);border:1px solid var(--red-bd);border-radius:var(--radius);padding:10px 13px;font-size:12px;color:var(--red);margin-bottom:12px}
-.empty-state{text-align:center;padding:36px 16px;color:var(--text-dim);font-size:13px}
+.res-summary{background:rgba(255,255,255,.03);border:1px solid rgba(232,200,116,.12);border-radius:12px;padding:13px 15px;font-size:13.5px;line-height:1.9;color:#9a8e78;margin-bottom:16px;white-space:pre-wrap}
+.warn-box{background:rgba(224,107,107,.08);border:1px solid rgba(224,107,107,.22);border-radius:12px;padding:12px 15px;font-size:13px;color:#ef9a9a;margin-bottom:14px}
 
-/* ── CLIENTES ── */
-.cli-detail{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.cli-stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid var(--border);flex-shrink:0}
-.cli-stat{padding:14px 18px;text-align:center;border-right:1px solid var(--border)}
-.cli-stat:last-child{border-right:none}
-.cli-stat-val{font-size:22px;font-weight:700;color:var(--gold)}
-.cli-stat-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
-.cli-res-list{flex:1;overflow-y:auto;padding:16px}
-.cli-res-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
-.cli-res-date{font-size:14px;font-weight:700;color:var(--text);min-width:80px}
-.cli-res-info{flex:1}
-.cli-res-info p{font-size:13px;color:var(--text-muted)}
-.cli-res-info strong{font-size:13px;color:var(--text)}
-.hcard-res{font-size:11px;color:var(--gold);font-weight:600}
-
-/* ── MISC ── */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+/* === MISC === */
+.empty-state{text-align:center;padding:40px 16px;color:#776c5a;font-size:13px}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ══ LOGIN ══════════════════════════════════════════════════ -->
 <div id="login">
   <div class="login-card">
-    <div class="login-brand">Feeling Vilanova</div>
-    <div class="login-sub">Gregory · Panel de Administración</div>
-    <div class="login-div" style="width:36px;height:1px;background:var(--border-gold);margin:18px auto 24px"></div>
+    <div class="login-logo">F</div>
+    <div class="login-title">Feeling Vilanova</div>
+    <div class="login-subtitle">Gregory · Panel de Administración</div>
+    <div class="login-divider"></div>
     <div class="login-label">Ingresa tu clave de acceso</div>
     <input type="password" id="login-key" class="input" placeholder="••••••••••••••••" style="text-align:center;letter-spacing:4px">
-    <button class="btn btn-gold" style="width:100%;margin-top:12px;padding:12px;font-size:14px" onclick="login()">Entrar</button>
-    <p id="login-error" style="color:var(--red);font-size:12px;margin-top:10px;display:none">Clave incorrecta. Inténtalo de nuevo.</p>
+    <button class="btn btn-gold" style="width:100%;margin-top:12px;padding:13px;font-size:14px" onclick="login()">Entrar</button>
+    <p id="login-error">Clave incorrecta. Inténtalo de nuevo.</p>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ══ APP ════════════════════════════════════════════════════ -->
 <div id="app" class="hidden">
 
   <!-- SIDEBAR -->
-  <div class="sidebar">
+  <aside class="sidebar">
     <div class="sb-brand">
-      <div class="sb-brand-name">Feeling</div>
-      <div class="sb-brand-sub">Gregory CRM</div>
+      <div class="sb-logo">
+        <span class="sb-logo-letter">F</span>
+        <span class="sb-logo-ring"></span>
+      </div>
+      <div class="sb-brand-text">
+        <div class="sb-brand-name">Feeling Vilanova</div>
+        <div class="sb-brand-sub">Agente IA · Reservas</div>
+      </div>
     </div>
+
+    <div class="sb-section-label">NAVEGACIÓN</div>
     <nav class="sb-nav">
       <div class="nav-item active" data-tab="principal" onclick="switchTab('principal',this)">
-        <span class="nav-icon">🏠</span> Principal
+        <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg></span>
+        <span>Principal</span>
       </div>
       <div class="nav-item" data-tab="reservas" onclick="switchTab('reservas',this)">
-        <span class="nav-icon">📅</span> Reservas
+        <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M16 2.5v4M8 2.5v4M3 9.5h18"/></svg></span>
+        <span>Reservas</span>
         <span class="nav-badge hidden" id="badge-reservas">0</span>
       </div>
       <div class="nav-item" data-tab="historial" onclick="switchTab('historial',this)">
-        <span class="nav-icon">💬</span> Historial de chats
-        <span class="nav-badge hidden" id="badge-historial">0</span>
+        <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14.5a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg></span>
+        <span>Historial de chats</span>
+        <span class="nav-dot hidden" id="badge-historial"></span>
       </div>
       <div class="nav-item" data-tab="clientes" onclick="switchTab('clientes',this)">
-        <span class="nav-icon">👥</span> Clientes
+        <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.3a4 4 0 0 1 0 7.4"/></svg></span>
+        <span>Clientes</span>
       </div>
       <div class="nav-item" data-tab="metricas" onclick="switchTab('metricas',this)">
-        <span class="nav-icon">📊</span> Métricas
+        <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M8 17v-5M13 17V8M18 17v-8"/></svg></span>
+        <span>Métricas</span>
       </div>
       <div class="nav-item" data-tab="test" onclick="switchTab('test',this)">
-        <span class="nav-icon">🧪</span> Test
+        <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.5v6l-5.4 9.3A2 2 0 0 0 5.3 21h13.4a2 2 0 0 0 1.7-3.2L15 8.5v-6"/><path d="M7.5 2.5h9M8.5 14h7"/></svg></span>
+        <span>Test</span>
       </div>
       <div class="nav-item" data-tab="ajustes" onclick="switchTab('ajustes',this)">
-        <span class="nav-icon">⚙️</span> Ajustes
+        <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 0 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1V3a2 2 0 0 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 0 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg></span>
+        <span>Ajustes</span>
       </div>
     </nav>
+
     <div class="sb-bottom">
-      <div class="nav-item" onclick="logout()"><span class="nav-icon">⎋</span> Cerrar sesión</div>
+      <div class="sb-status">
+        <span class="sb-status-dot"></span>
+        <span class="sb-status-name" id="sb-agent-name">Gregory está activo</span>
+      </div>
+      <div class="sb-status-sub">Conversacional Pro · responde 24/7</div>
     </div>
-  </div>
+  </aside>
 
   <!-- MAIN -->
   <div class="main">
-    <div class="topbar">
-      <div>
-        <span style="font-size:14px;font-weight:700;color:var(--text)" id="topbar-title">Principal</span>
-        <span style="font-size:11px;color:var(--text-muted)" id="topbar-meta"> · Resumen general</span>
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-heading">
+        <h1 id="topbar-title">Principal</h1>
+        <p id="topbar-meta">Resumen general</p>
       </div>
       <div class="topbar-right">
-        <span class="status-dot-live"></span>
-        <span style="font-size:11px;color:var(--text-muted)">En línea</span>
-        <button class="btn btn-ghost btn-sm" onclick="refresh()" style="margin-left:8px">⟳ Actualizar</button>
-      </div>
-    </div>
-
-    <!-- ── PRINCIPAL ── -->
-    <div id="tab-principal" class="tab-panel active">
-      <div class="page-header"><h1>Resumen del negocio</h1><p>Vista general del rendimiento de Gregory y las reservas</p></div>
-      <div class="stats-grid">
-        <div class="stat-card gold"><div class="stat-label">Chats totales</div><div class="stat-value gold" id="ov-chats">—</div><div class="stat-sub">conversaciones iniciadas</div></div>
-        <div class="stat-card"><div class="stat-label">Confirmadas este mes</div><div class="stat-value green" id="ov-confirmed">—</div><div class="stat-sub">reservas confirmadas</div></div>
-        <div class="stat-card"><div class="stat-label">Pendientes</div><div class="stat-value orange" id="ov-pending">—</div><div class="stat-sub">esperan confirmación</div></div>
-        <div class="stat-card"><div class="stat-label">Clientes nuevos</div><div class="stat-value" id="ov-clients">—</div><div class="stat-sub">este mes</div></div>
-      </div>
-      <div class="two-col">
-        <div>
-          <div class="stats-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-            <div class="stat-card"><div class="stat-label">Total clientes</div><div class="stat-value" id="ov-total-cli">—</div></div>
-            <div class="stat-card"><div class="stat-label">Total reservas</div><div class="stat-value gold" id="ov-total-res">—</div></div>
-            <div class="stat-card"><div class="stat-label">Total comensales</div><div class="stat-value" id="ov-guests">—</div></div>
-            <div class="stat-card"><div class="stat-label">Consultas FAQ</div><div class="stat-value" id="ov-faq">—</div></div>
+        <div class="topbar-date">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e8c874" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
+          <span id="topbar-date">—</span>
+        </div>
+        <button class="topbar-bell" onclick="refresh()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="topbar-bell-dot" id="notif-dot"></span>
+        </button>
+        <div class="topbar-user">
+          <div class="topbar-user-info">
+            <div class="topbar-user-name">Feeling Admin</div>
+            <div class="topbar-user-role">Gerente</div>
           </div>
-          <div class="section-card">
-            <div class="section-card-header"><h3>Estado de sesiones</h3></div>
-            <div class="section-card-body" id="ov-sessions-status"></div>
+          <div class="topbar-avatar">FA</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ── PRINCIPAL ───────────────────────────────── -->
+      <div id="tab-principal" class="tab-panel active">
+        <div class="hero-card">
+          <div class="hero-ring1"></div>
+          <div class="hero-ring2"></div>
+          <div class="hero-icon">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+          </div>
+          <div class="hero-body">
+            <div class="hero-title">Panel de control · Feeling Vilanova</div>
+            <div class="hero-sub">Tu agente <b id="hero-agent-name">Gregory</b> está activo y gestionando reservas <b class="white">24/7</b> por WhatsApp de forma automática.</div>
+          </div>
+          <button class="btn btn-gold" onclick="switchTab('test',document.querySelector('[data-tab=test]'))">Probar el agente →</button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-hdr"><span class="stat-label">Chats totales</span><span class="stat-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14.5a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg></span></div>
+            <div class="stat-value gold" id="ov-chats">—</div>
+            <div class="stat-sub">conversaciones iniciadas</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-hdr"><span class="stat-label">Confirmadas este mes</span><span class="stat-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#7fe0a3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+            <div class="stat-value green" id="ov-confirmed">—</div>
+            <div class="stat-sub up">reservas confirmadas</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-hdr"><span class="stat-label">Pendientes</span><span class="stat-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f0b07a" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span></div>
+            <div class="stat-value orange" id="ov-pending">—</div>
+            <div class="stat-sub warn">esperan confirmación</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-hdr"><span class="stat-label">Clientes nuevos</span><span class="stat-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
+            <div class="stat-value" id="ov-clients">—</div>
+            <div class="stat-sub">este mes</div>
           </div>
         </div>
-        <div>
-          <div class="section-card">
-            <div class="section-card-header">
-              <h3>Reservas pendientes de confirmación</h3>
-              <button class="btn btn-ghost btn-sm" onclick="switchTab('reservas',document.querySelector('[data-tab=reservas]'))">Ver todas →</button>
+
+        <div class="two-col">
+          <div>
+            <div class="section-card" style="margin-bottom:16px">
+              <div class="section-hdr"><span class="section-hdr-title">Totales acumulados</span></div>
+              <div class="section-body" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(232,200,116,.08);margin:0 -22px;padding:0 0 0 0">
+                <div style="padding:16px 20px;background:linear-gradient(180deg,#17130b,#100d08)">
+                  <div style="font-size:11px;color:#776c5a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Total clientes</div>
+                  <div style="font-family:Sora,sans-serif;font-size:24px;font-weight:800;color:#f3ead6" id="ov-total-cli">—</div>
+                </div>
+                <div style="padding:16px 20px;background:linear-gradient(180deg,#17130b,#100d08)">
+                  <div style="font-size:11px;color:#776c5a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Total reservas</div>
+                  <div style="font-family:Sora,sans-serif;font-size:24px;font-weight:800;color:#e8c874" id="ov-total-res">—</div>
+                </div>
+                <div style="padding:16px 20px;background:linear-gradient(180deg,#17130b,#100d08)">
+                  <div style="font-size:11px;color:#776c5a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Total comensales</div>
+                  <div style="font-family:Sora,sans-serif;font-size:24px;font-weight:800;color:#f3ead6" id="ov-guests">—</div>
+                </div>
+                <div style="padding:16px 20px;background:linear-gradient(180deg,#17130b,#100d08)">
+                  <div style="font-size:11px;color:#776c5a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Consultas FAQ</div>
+                  <div style="font-family:Sora,sans-serif;font-size:24px;font-weight:800;color:#f3ead6" id="ov-faq">—</div>
+                </div>
+              </div>
             </div>
-            <div class="section-card-body" id="ov-pending-list"><div class="empty-state">Sin pendientes 🎉</div></div>
+            <div class="section-card">
+              <div class="section-hdr"><span class="section-hdr-title">Estado de sesiones</span></div>
+              <div class="section-body" id="ov-sessions-status"></div>
+            </div>
+          </div>
+          <div>
+            <div class="section-card">
+              <div class="section-hdr">
+                <span class="section-hdr-title">Reservas pendientes</span>
+                <button class="btn btn-ghost btn-sm" onclick="switchTab('reservas',document.querySelector('[data-tab=reservas]'))">Ver todas →</button>
+              </div>
+              <div class="section-body" id="ov-pending-list"><div class="empty-state">Sin pendientes 🎉</div></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ── RESERVAS ── -->
-    <div id="tab-reservas" class="tab-panel">
-      <div class="page-header"><h1>Gestión de reservas</h1><p>Confirma, edita o anula las reservas de tus clientes</p></div>
-      <div class="filter-bar">
-        <button class="ftab active" onclick="filterRes('',this)">Todas</button>
-        <button class="ftab" onclick="filterRes('pending_confirmation',this)">Pendientes</button>
-        <button class="ftab" onclick="filterRes('confirmed',this)">Confirmadas</button>
-        <button class="ftab" onclick="filterRes('cancelled',this)">Anuladas</button>
-        <button class="ftab" onclick="filterRes('completed',this)">Completadas</button>
-        <div class="search-box" style="margin-left:auto"><input type="text" placeholder="Buscar cliente…" id="res-search" oninput="renderResTable()"></div>
-      </div>
-      <div class="section-card">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Cliente</th><th>Teléfono</th><th>Email</th><th>Fecha</th><th>Hora</th><th>Personas</th><th>Servicio</th><th>Estado</th><th>Notas</th><th>Acciones</th></tr></thead>
-            <tbody id="res-tbody"></tbody>
-          </table>
+      <!-- ── RESERVAS ────────────────────────────────── -->
+      <div id="tab-reservas" class="tab-panel">
+        <div class="filter-bar">
+          <button class="ftab active" onclick="filterRes('',this)">Todas</button>
+          <button class="ftab" onclick="filterRes('pending_confirmation',this)">Pendientes</button>
+          <button class="ftab" onclick="filterRes('confirmed',this)">Confirmadas</button>
+          <button class="ftab" onclick="filterRes('cancelled',this)">Anuladas</button>
+          <button class="ftab" onclick="filterRes('completed',this)">Completadas</button>
+          <div class="search-box"><input type="text" placeholder="Buscar cliente…" id="res-search" oninput="renderResTable()"></div>
         </div>
-      </div>
-    </div>
-
-    <!-- ── HISTORIAL ── -->
-    <div id="tab-historial" class="tab-panel no-pad">
-      <div class="historial-wrap">
-        <div class="hlist">
-          <div class="hlist-header">
-            <h3>Todas las conversaciones</h3>
-            <div class="hlist-search"><input type="text" placeholder="Buscar por nombre o teléfono…" id="hist-search" oninput="renderHistList()"></div>
-          </div>
-          <div class="hlist-body" id="hist-list"></div>
-        </div>
-        <div class="hdetail" id="hdetail">
-          <div class="hdetail-ph">
-            <div class="hdetail-ph-brand">Feeling</div>
-            <div class="hdetail-ph-sub">Selecciona una conversación</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── CLIENTES ── -->
-    <div id="tab-clientes" class="tab-panel no-pad">
-      <div class="historial-wrap">
-        <div class="hlist">
-          <div class="hlist-header">
-            <h3>Directorio de clientes</h3>
-            <div class="hlist-search"><input type="text" placeholder="Buscar por nombre o teléfono…" id="cli-search" oninput="renderClientList()"></div>
-          </div>
-          <div class="hlist-body" id="cli-list"></div>
-        </div>
-        <div class="cli-detail" id="cli-detail">
-          <div class="hdetail-ph">
-            <div class="hdetail-ph-brand">Feeling</div>
-            <div class="hdetail-ph-sub">Selecciona un cliente</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── MÉTRICAS ── -->
-    <div id="tab-metricas" class="tab-panel">
-      <div class="page-header"><h1>Métricas</h1><p>Análisis del rendimiento por período</p></div>
-      <div class="period-sel">
-        <button class="ftab" onclick="loadMetrics('week',this)">Esta semana</button>
-        <button class="ftab active" onclick="loadMetrics('month',this)">Este mes</button>
-        <button class="ftab" onclick="loadMetrics('6months',this)">Últimos 6 meses</button>
-      </div>
-      <div class="metrics-grid">
-        <div class="metric-stat"><div class="ms-val" id="m-total">—</div><div class="ms-label">Reservas totales</div></div>
-        <div class="metric-stat"><div class="ms-val" style="color:var(--green)" id="m-conf">—</div><div class="ms-label">Confirmadas</div></div>
-        <div class="metric-stat"><div class="ms-val" style="color:var(--orange)" id="m-pend">—</div><div class="ms-label">Pendientes</div></div>
-        <div class="metric-stat"><div class="ms-val" style="color:var(--red)" id="m-canc">—</div><div class="ms-label">Anuladas</div></div>
-        <div class="metric-stat"><div class="ms-val" id="m-guests">—</div><div class="ms-label">Total comensales</div></div>
-        <div class="metric-stat"><div class="ms-val" id="m-avg">—</div><div class="ms-label">Promedio comensales</div></div>
-      </div>
-      <div class="two-col">
-        <div>
-          <div class="chart-wrap">
-            <div class="chart-title">Reservas en el tiempo</div>
-            <svg id="m-timeline" viewBox="0 0 400 120" style="width:100%;height:130px" preserveAspectRatio="none"></svg>
-          </div>
-          <div class="chart-wrap"><div class="chart-title">Preguntas frecuentes</div><div id="m-faq"></div></div>
-        </div>
-        <div>
-          <div class="chart-wrap"><div class="chart-title">Por tipo de servicio</div><div id="m-service"></div></div>
-          <div class="chart-wrap"><div class="chart-title">Clientes frecuentes</div><div id="m-freq"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── TEST ── -->
-    <div id="tab-test" class="tab-panel no-pad">
-      <div class="test-hdr">
-        <div class="test-hdr-info">
-          <div class="test-avatar" id="test-av">G</div>
-          <div><h3 id="test-agent-name">Gregory — Modo de prueba</h3><p>Feeling Vilanova Grand Marina · sin WhatsApp</p></div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="clearTest()">🗑️ Limpiar</button>
-      </div>
-      <div id="test-messages"></div>
-      <div class="test-input-bar">
-        <textarea id="test-input" placeholder="Escribe un mensaje para probar a Gregory…" rows="1" onkeydown="testKeydown(event)" oninput="autoResize(this)"></textarea>
-        <button class="test-send" id="test-send-btn" onclick="sendTest()">➤</button>
-      </div>
-    </div>
-
-    <!-- ── AJUSTES ── -->
-    <div id="tab-ajustes" class="tab-panel">
-      <div class="page-header"><h1>Ajustes del agente</h1><p>Personaliza el comportamiento y la identidad de Gregory</p></div>
-      <div class="settings-form">
         <div class="section-card">
-          <div class="section-card-header"><h3>Identidad del agente</h3></div>
-          <div class="section-card-body">
+          <div class="table-wrap">
+            <table class="res-table">
+              <thead><tr><th>Cliente</th><th>Teléfono</th><th>Email</th><th>Fecha</th><th>Hora</th><th>Pax</th><th>Servicio</th><th>Estado</th><th>Notas</th><th></th></tr></thead>
+              <tbody id="res-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HISTORIAL ───────────────────────────────── -->
+      <div id="tab-historial" class="tab-panel split">
+        <div class="historial-wrap">
+          <div class="hlist">
+            <div class="hlist-header">
+              <div class="hlist-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9a8e78" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+                <input type="text" placeholder="Buscar conversación…" id="hist-search" oninput="renderHistList()">
+              </div>
+            </div>
+            <div class="hlist-body" id="hist-list"></div>
+          </div>
+          <div class="hdetail" id="hdetail">
+            <div class="hdetail-ph">
+              <div class="hdetail-ph-logo">F</div>
+              <div class="hdetail-ph-sub">Selecciona una conversación</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CLIENTES ────────────────────────────────── -->
+      <div id="tab-clientes" class="tab-panel split">
+        <div class="historial-wrap">
+          <div class="hlist">
+            <div class="hlist-header">
+              <div class="hlist-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9a8e78" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+                <input type="text" placeholder="Buscar por nombre o teléfono…" id="cli-search" oninput="renderClientList()">
+              </div>
+            </div>
+            <div class="hlist-body" id="cli-list"></div>
+          </div>
+          <div class="cli-detail" id="cli-detail">
+            <div class="hdetail-ph">
+              <div class="hdetail-ph-logo">F</div>
+              <div class="hdetail-ph-sub">Selecciona un cliente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MÉTRICAS ────────────────────────────────── -->
+      <div id="tab-metricas" class="tab-panel">
+        <div class="period-sel">
+          <button class="ftab" onclick="loadMetrics('week',this)">Esta semana</button>
+          <button class="ftab active" onclick="loadMetrics('month',this)">Este mes</button>
+          <button class="ftab" onclick="loadMetrics('6months',this)">Últimos 6 meses</button>
+        </div>
+        <div class="metrics-grid">
+          <div class="metric-stat"><div class="metric-label">Reservas totales</div><div class="metric-val gold" id="m-total">—</div></div>
+          <div class="metric-stat"><div class="metric-label">Confirmadas</div><div class="metric-val green" id="m-conf">—</div></div>
+          <div class="metric-stat"><div class="metric-label">Pendientes</div><div class="metric-val orange" id="m-pend">—</div></div>
+          <div class="metric-stat"><div class="metric-label">Anuladas</div><div class="metric-val red" id="m-canc">—</div></div>
+          <div class="metric-stat"><div class="metric-label">Total comensales</div><div class="metric-val" id="m-guests">—</div></div>
+          <div class="metric-stat"><div class="metric-label">Promedio comensales</div><div class="metric-val" id="m-avg">—</div></div>
+        </div>
+        <div class="two-col">
+          <div>
+            <div class="chart-wrap"><div class="chart-title">Reservas en el tiempo</div><svg id="m-timeline" viewBox="0 0 400 120" style="width:100%;height:130px" preserveAspectRatio="none"></svg></div>
+            <div class="chart-wrap"><div class="chart-title">Preguntas frecuentes</div><div id="m-faq"></div></div>
+          </div>
+          <div>
+            <div class="chart-wrap"><div class="chart-title">Por tipo de servicio</div><div id="m-service"></div></div>
+            <div class="chart-wrap"><div class="chart-title">Clientes frecuentes</div><div id="m-freq"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TEST ───────────────────────────────────── -->
+      <div id="tab-test">
+        <div class="test-panel">
+          <div class="test-hdr">
+            <div class="test-av-wrap">
+              <div id="test-av">G</div>
+              <span class="test-av-dot"></span>
+            </div>
+            <div class="test-hdr-info">
+              <h3 id="test-agent-name">Gregory<span class="test-hdr-badge">MODO PRUEBA</span></h3>
+              <p>Agente de reservas · Feeling Vilanova</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="clearTest()">↺ Reiniciar</button>
+          </div>
+          <div id="test-messages"></div>
+          <div class="test-input-bar">
+            <textarea id="test-input" placeholder="Escribe un mensaje como si fueras un cliente…" rows="1" onkeydown="testKeydown(event)" oninput="autoResize(this)"></textarea>
+            <div class="test-input-row">
+              <div style="flex:1"></div>
+              <button class="test-send" id="test-send-btn" onclick="sendTest()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 11l18-8-8 18-2-7-8-3z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="test-sidebar">
+          <div class="test-config">
+            <h3>Configuración activa</h3>
+            <div class="test-config-row"><div class="test-cfg-label">Nombre del agente</div><div class="test-cfg-val" id="tc-name">—</div></div>
+            <div class="test-config-row"><div class="test-cfg-label">Tono conversacional</div><div class="test-cfg-val normal" id="tc-tone">—</div></div>
+            <div class="test-config-row"><div class="test-cfg-label">Idioma</div><div class="test-cfg-val normal">Español</div></div>
+            <div class="test-config-row"><div class="test-cfg-label">Modelo</div><div class="test-cfg-val normal">Conversacional Pro</div></div>
+            <button class="btn btn-ghost" style="width:100%;margin-top:16px;justify-content:center" onclick="switchTab('ajustes',document.querySelector('[data-tab=ajustes]'))">Editar configuración</button>
+          </div>
+          <div class="test-tip">
+            <div class="test-tip-title">💡 Consejo</div>
+            <div class="test-tip-body">Prueba a pedir una reserva, cambiar la hora o preguntar por el menú. El agente responde igual que con clientes reales por WhatsApp.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AJUSTES ─────────────────────────────────── -->
+      <div id="tab-ajustes" class="tab-panel">
+        <div style="max-width:880px">
+          <div class="settings-section">
+            <div class="settings-section-title">Identidad del agente</div>
+            <div class="settings-section-sub">Cómo se presenta el agente ante tus clientes.</div>
             <div class="avatar-preview" id="avatar-prev">G</div>
-            <div class="form-group">
-              <label class="form-label">URL de foto de perfil</label>
-              <input type="url" id="s-avatar" class="input" placeholder="https://..." oninput="previewAvatar()">
-              <p class="form-hint">URL de imagen JPG o PNG. Déjalo vacío para usar la inicial del nombre.</p>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nombre del agente</label>
-              <input type="text" id="s-name" class="input" placeholder="Gregory" oninput="previewAvatar()">
+            <div class="two-col">
+              <div class="form-group">
+                <label class="form-label">Nombre del agente</label>
+                <input type="text" id="s-name" class="input" placeholder="Gregory" oninput="previewAvatar()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">URL de foto de perfil</label>
+                <input type="url" id="s-avatar" class="input" placeholder="https://..." oninput="previewAvatar()">
+                <p class="form-hint">Deja vacío para usar la inicial.</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="section-card">
-          <div class="section-card-header"><h3>Comportamiento y tono</h3></div>
-          <div class="section-card-body">
+          <div class="settings-section">
+            <div class="settings-section-title">Comportamiento y tono</div>
+            <div class="settings-section-sub">Define cómo conversa el agente con tus clientes.</div>
             <div class="form-group">
               <label class="form-label">Tono de comunicación</label>
               <select id="s-tone" class="input select">
@@ -548,25 +774,25 @@ tr:hover td{background:rgba(255,255,255,.02)}
             </div>
             <div class="form-group">
               <label class="form-label">Información adicional para el agente</label>
-              <textarea id="s-context" class="textarea" rows="6" placeholder="Añade aquí cualquier información nueva que el agente deba conocer: promociones especiales, eventos próximos, cambios de horario, platos del día, etc. Este texto se incorpora al knowledge base del agente de forma inmediata."></textarea>
-              <p class="form-hint">Los cambios se aplican en el próximo mensaje que procese el agente (caché de 5 min).</p>
+              <textarea id="s-context" class="textarea" rows="6" placeholder="Añade aquí cualquier información nueva: promociones, eventos próximos, cambios de horario, platos del día, etc."></textarea>
+              <p class="form-hint">Los cambios se aplican en el próximo mensaje que procese el agente.</p>
             </div>
           </div>
-        </div>
-        <div class="save-row">
-          <button class="btn btn-gold" onclick="saveSettings()">💾 Guardar cambios</button>
-          <span class="save-ok" id="save-ok">✓ Cambios guardados correctamente</span>
+          <div class="save-row">
+            <button class="btn btn-gold" onclick="saveSettings()">Guardar cambios</button>
+            <span class="save-ok" id="save-ok">✓ Cambios guardados correctamente</span>
+          </div>
         </div>
       </div>
-    </div>
 
+    </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /app -->
 
-<!-- MODAL: Confirmar -->
+<!-- ══ MODALS ═════════════════════════════════════════════════ -->
 <div id="m-confirm" class="overlay hidden">
   <div class="modal">
-    <div class="modal-hd"><h3>✓ Confirmar reserva</h3><p id="mc-sub"></p></div>
+    <div class="modal-hd"><h3>Confirmar reserva</h3><p id="mc-sub"></p></div>
     <div class="modal-bd">
       <div class="res-summary" id="mc-summary"></div>
       <div class="mfield"><label>Mensaje WhatsApp al cliente</label><textarea id="mc-msg" class="textarea"></textarea></div>
@@ -578,10 +804,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-<!-- MODAL: Anular -->
 <div id="m-cancel" class="overlay hidden">
   <div class="modal">
-    <div class="modal-hd"><h3>✗ Anular reserva</h3><p id="mca-sub"></p></div>
+    <div class="modal-hd"><h3>Anular reserva</h3><p id="mca-sub"></p></div>
     <div class="modal-bd">
       <div class="warn-box">⚠ La reserva se eliminará de la base de datos permanentemente.</div>
       <div class="res-summary" id="mca-summary"></div>
@@ -594,16 +819,15 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-<!-- MODAL: Editar -->
 <div id="m-edit" class="overlay hidden">
   <div class="modal">
-    <div class="modal-hd"><h3>✎ Editar reserva</h3><p id="me-sub"></p></div>
+    <div class="modal-hd"><h3>Editar reserva</h3><p id="me-sub"></p></div>
     <div class="modal-bd">
-      <div class="two-col">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
         <div class="mfield"><label>Fecha</label><input type="date" id="me-date" class="input"></div>
         <div class="mfield"><label>Hora</label><input type="time" id="me-time" class="input"></div>
       </div>
-      <div class="two-col">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
         <div class="mfield"><label>Personas</label><input type="number" id="me-guests" class="input" min="1" max="500"></div>
         <div class="mfield"><label>Servicio</label>
           <select id="me-service" class="input select">
@@ -615,14 +839,17 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="modal-ft">
       <button class="btn btn-ghost" onclick="closeModals()">Cancelar</button>
-      <button class="btn btn-gold" onclick="doEdit()">✎ Guardar cambios</button>
+      <button class="btn btn-gold" onclick="doEdit()">Guardar cambios</button>
     </div>
   </div>
 </div>
 
 <script>
 // ── STATE ──────────────────────────────────────────────────────────────────────
-let token='',sessions=[],reservations=[],currentPhone=null,currentReservation=null,currentResFilter='',currentTab='principal',metricsLoaded=false,refreshTimer=null;
+let token='',sessions=[],reservations=[],currentPhone=null,currentReservation=null,
+    currentResFilter='',currentTab='principal',metricsLoaded=false,refreshTimer=null;
+let clients=[],currentCliPhone=null;
+let _testPoll=null;
 
 // ── AUTH ───────────────────────────────────────────────────────────────────────
 async function login(){
@@ -636,6 +863,7 @@ document.getElementById('login-key').addEventListener('keydown',e=>{if(e.key==='
 
 // ── INIT ───────────────────────────────────────────────────────────────────────
 async function init(){
+  document.getElementById('topbar-date').textContent=new Date().toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
   await Promise.all([loadSessions(),loadReservations(),loadOverview(),loadClients()]);
   loadTestHistory();loadSettings();
   refreshTimer=setInterval(refresh,30000);
@@ -643,7 +871,11 @@ async function init(){
 async function refresh(){
   await Promise.all([loadSessions(),loadReservations(),loadOverview()]);
   if(currentPhone)loadChat(currentPhone,false);
-  if(currentTab==='metricas')loadMetrics(document.querySelector('.period-sel .ftab.active')?.textContent?.includes('semana')?'week':document.querySelector('.period-sel .ftab.active')?.textContent?.includes('6')?'6months':'month');
+  if(currentTab==='metricas'){
+    const activePeriod=document.querySelector('.period-sel .ftab.active');
+    const txt=activePeriod?activePeriod.textContent:'';
+    loadMetrics(txt.includes('semana')?'week':txt.includes('6')?'6months':'month');
+  }
 }
 
 // ── API ────────────────────────────────────────────────────────────────────────
@@ -656,25 +888,22 @@ async function api(url,opts={}){
 }
 
 // ── TABS ───────────────────────────────────────────────────────────────────────
-const tabMeta={principal:'Resumen general',reservas:'Gestión',historial:'Conversaciones',clientes:'Directorio',metricas:'Análisis',test:'Simulador',ajustes:'Configuración'};
+const tabMeta={principal:'Resumen general',reservas:'Gestión de reservas',historial:'Conversaciones WhatsApp',clientes:'Directorio de clientes',metricas:'Análisis y estadísticas',test:'Simulador del agente',ajustes:'Configuración del agente'};
+const tabTitles={principal:'Principal',reservas:'Reservas',historial:'Historial',clientes:'Clientes',metricas:'Métricas',test:'Test',ajustes:'Ajustes'};
 function switchTab(tab,el){
   currentTab=tab;
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.querySelectorAll('.tab-panel, #tab-test').forEach(p=>p.classList.remove('active'));
   const panel=document.getElementById('tab-'+tab);
   if(panel)panel.classList.add('active');
-  document.getElementById('topbar-title').textContent=el.textContent.trim().replace(/\d+/,'').trim();
-  document.getElementById('topbar-meta').textContent=' · '+(tabMeta[tab]||'');
+  document.getElementById('topbar-title').textContent=tabTitles[tab]||tab;
+  document.getElementById('topbar-meta').textContent=tabMeta[tab]||'';
   if(tab==='metricas'&&!metricsLoaded){metricsLoaded=true;loadMetrics('month');}
-  // Refresh instantáneo al entrar a pestañas con datos en vivo
-  if(tab==='historial'){
-    loadSessions().then(()=>{ if(currentPhone) loadChat(currentPhone,false); });
-  }
+  if(tab==='historial'){loadSessions().then(()=>{if(currentPhone)loadChat(currentPhone,false);});}
   if(tab==='principal'){loadOverview();loadReservations();}
   if(tab==='reservas'){loadReservations();}
   if(tab==='clientes'){loadClients();}
-  // Polling del test (para recibir mensajes de admin)
   if(tab==='test'){loadTestHistory();startTestPoll();}
   else{stopTestPoll();}
 }
@@ -687,29 +916,40 @@ async function loadOverview(){
   setText('ov-total-cli',d.totalClients);setText('ov-total-res',d.totalReservations);
   setText('ov-guests',d.totalGuests);setText('ov-faq',d.totalFAQ);
   document.getElementById('ov-sessions-status').innerHTML=[
-    sRow('Activos',d.activeChats,'var(--green)'),
-    sRow('Esperan confirmación',d.pendingConfirmation,'var(--gold)'),
-    sRow('Modo administrador',d.adminMode,'var(--orange)'),
+    sRow('Activos',d.activeChats,'#7fe0a3'),
+    sRow('Esperan confirmación',d.pendingConfirmation,'#e8c874'),
+    sRow('Modo administrador',d.adminMode,'#f0b07a'),
   ].join('');
+  const nd=document.getElementById('notif-dot');
+  if(nd)nd.style.display=(d.pendingConfirmation>0||d.adminMode>0)?'block':'none';
   updateBadges(d.pendingConfirmation,d.adminMode);
 }
-function sRow(label,n,c){return`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-muted);display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:${c};display:inline-block"></span>${label}</span><strong style="color:var(--text)">${n}</strong></div>`;}
+function sRow(label,n,c){
+  return`<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(232,200,116,.07)">
+    <span style="color:#9a8e78;display:flex;align-items:center;gap:9px"><span style="width:7px;height:7px;border-radius:50%;background:${c};display:inline-block;flex:none"></span>${label}</span>
+    <strong style="font-family:Sora,sans-serif;font-size:17px;font-weight:700;color:#f3ead6">${n}</strong>
+  </div>`;
+}
 function renderPendingOverview(){
   const pend=reservations.filter(r=>r.status==='pending_confirmation').slice(0,5);
   const el=document.getElementById('ov-pending-list');if(!el)return;
   if(!pend.length){el.innerHTML='<div class="empty-state">Sin pendientes 🎉</div>';return;}
-  el.innerHTML=pend.map(r=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-    <div><div style="font-size:13px;font-weight:600">${esc(r.client_name)}</div>
-    <div style="font-size:11px;color:var(--text-muted)">${fmtDate(r.date)} · ${(r.time||'').substring(0,5)} · ${r.num_guests} pers.</div></div>
-    <div style="display:flex;gap:6px">
-      <button class="btn btn-success btn-sm" onclick="openConfirm('${r.id}')">✓</button>
-      <button class="btn btn-danger btn-sm" onclick="openCancel('${r.id}')">✗</button>
-    </div></div>`).join('');
+  el.innerHTML=pend.map(r=>`
+    <div style="padding:12px 0;border-bottom:1px solid rgba(232,200,116,.07);display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:13.5px;font-weight:700;color:#f3ead6">${esc(r.client_name)}</div>
+        <div style="font-size:12px;color:#9a8e78;margin-top:2px">${fmtDate(r.date)} · ${(r.time||'').substring(0,5)} · ${r.num_guests} pers.</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-success btn-sm" onclick="openConfirm('${r.id}')">✓</button>
+        <button class="btn btn-danger btn-sm" onclick="openCancel('${r.id}')">✗</button>
+      </div>
+    </div>`).join('');
 }
 function updateBadges(pending,admin){
   const br=document.getElementById('badge-reservas'),bh=document.getElementById('badge-historial');
   if(pending>0){br.textContent=pending;br.classList.remove('hidden');}else br.classList.add('hidden');
-  if(admin>0){bh.textContent=admin;bh.classList.remove('hidden');}else bh.classList.add('hidden');
+  if(admin>0){bh.classList.remove('hidden');}else bh.classList.add('hidden');
 }
 
 // ── SESSIONS ──────────────────────────────────────────────────────────────────
@@ -735,21 +975,24 @@ function renderResTable(){
   list.sort((a,b)=>{const o={pending_confirmation:0,confirmed:1,completed:2,cancelled:3};return((o[a.status]??4)-(o[b.status]??4))||((a.date||'')>=(b.date||'')?1:-1);});
   const tb=document.getElementById('res-tbody');if(!tb)return;
   if(!list.length){tb.innerHTML=`<tr><td colspan="10" class="empty-state">Sin reservas</td></tr>`;return;}
-  tb.innerHTML=list.map(r=>`<tr>
-    <td><strong>${esc(r.client_name||'—')}</strong></td>
-    <td style="color:var(--text-muted)">${r.phone_number||'—'}</td>
-    <td style="color:var(--text-muted);font-size:12px">${esc(r.email||'—')}</td>
-    <td>${fmtDate(r.date)}</td>
-    <td>${(r.time||'').substring(0,5)||'—'}</td>
-    <td>${r.num_guests||'—'}</td>
-    <td>${esc(r.service||'—')}</td>
-    <td>${pillHtml(r.status)}</td>
-    <td style="color:var(--text-muted);font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.notes||'')}">${esc(r.notes||'—')}</td>
-    <td class="td-actions">
-      ${r.status==='pending_confirmation'?`<button class="btn btn-success btn-sm" onclick="openConfirm('${r.id}')">✓ Confirmar</button>`:''}
-      <button class="btn btn-ghost btn-sm" onclick="openEdit('${r.id}')">✎ Editar</button>
-      ${r.status!=='cancelled'?`<button class="btn btn-danger btn-sm" onclick="openCancel('${r.id}')">✗</button>`:''}
-    </td></tr>`).join('');
+  tb.innerHTML=list.map(r=>{
+    const ini=(r.client_name||'?')[0].toUpperCase();
+    return`<tr>
+      <td><div style="display:flex;align-items:center;gap:10px"><div class="ini-badge">${ini}</div><div style="font-size:14px;font-weight:700">${esc(r.client_name||'—')}</div></div></td>
+      <td style="color:#9a8e78;font-size:13px">${r.phone_number||'—'}</td>
+      <td style="color:#9a8e78;font-size:12px">${esc(r.email||'—')}</td>
+      <td><span style="font-size:13.5px;font-weight:700;color:#e8c874">${fmtDate(r.date)}</span></td>
+      <td style="font-weight:600">${(r.time||'').substring(0,5)||'—'}</td>
+      <td style="font-weight:600">${r.num_guests||'—'}</td>
+      <td style="color:#cdbf9f">${esc(r.service||'—')}</td>
+      <td>${pillHtml(r.status)}</td>
+      <td style="color:#9a8e78;font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.notes||'')}">${esc(r.notes||'—')}</td>
+      <td class="td-actions">
+        ${r.status==='pending_confirmation'?`<button class="btn btn-success btn-sm" onclick="openConfirm('${r.id}')">✓</button>`:''}
+        <button class="btn btn-ghost btn-sm" onclick="openEdit('${r.id}')">✎</button>
+        ${r.status!=='cancelled'?`<button class="btn btn-danger btn-sm" onclick="openCancel('${r.id}')">✗</button>`:''}
+      </td></tr>`;
+  }).join('');
 }
 
 // ── HISTORIAL ─────────────────────────────────────────────────────────────────
@@ -759,16 +1002,23 @@ function renderHistList(){
   if(search)list=list.filter(s=>(s.client_name||'').toLowerCase().includes(search)||(s.phone_number||'').includes(search));
   const el=document.getElementById('hist-list');if(!el)return;
   if(!list.length){el.innerHTML='<div class="empty-state">Sin conversaciones</div>';return;}
-  el.innerHTML=list.map(s=>`<div class="hcard s-${s.status}${s.phone_number===currentPhone?' sel':''}" onclick="loadChat('${s.phone_number}')">
-    <div class="hcard-top">
-      <span class="hcard-name">${esc(s.client_name||s.phone_number)}</span>
-      <span class="hcard-time">${fmtTime(s.last_message)}</span>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
-      ${pillHtml(s.status)}
-      ${s.unread_count>0?`<span style="background:var(--gold);color:#080808;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px">${s.unread_count}</span>`:''}
-    </div>
-  </div>`).join('');
+  el.innerHTML=list.map(s=>{
+    const ini=(s.client_name||s.phone_number||'?')[0].toUpperCase();
+    const dotColor=s.status==='admin_mode'?'#f0b07a':s.status==='needs_confirmation'?'#e8c874':'#6fcf97';
+    return`<div class="hcard s-${s.status}${s.phone_number===currentPhone?' sel':''}" onclick="loadChat('${s.phone_number}')">
+      <div class="hcard-av">${ini}<span class="hcard-av-dot" style="background:${dotColor}"></span></div>
+      <div class="hcard-body">
+        <div class="hcard-top">
+          <span class="hcard-name">${esc(s.client_name||s.phone_number)}</span>
+          <span class="hcard-time">${fmtTime(s.last_message)}</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
+          ${pillHtml(s.status)}
+          ${s.unread_count>0?`<span style="background:linear-gradient(145deg,#f5d77a,#c9952f);color:#1a1206;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px">${s.unread_count}</span>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 async function loadChat(phone,scroll=true){
@@ -778,15 +1028,19 @@ async function loadChat(phone,scroll=true){
   const isAdmin=s.status==='admin_mode';
   const pend=(d.reservations||[]).find(r=>r.status==='pending_confirmation');
   currentReservation=pend||null;
+  const ini=(s.client_name||phone||'?')[0].toUpperCase();
   const detail=document.getElementById('hdetail');
   detail.innerHTML=`
     <div class="chat-hdr">
-      <div class="chat-client"><h3>${esc(s.client_name||phone)}</h3><p>${phone}</p></div>
-      <div class="chat-acts">
+      <div class="chat-hdr-av">${ini}</div>
+      <div class="chat-hdr-info"><h3>${esc(s.client_name||phone)}</h3><p>${phone} · ${statusLabel(s.status)}</p></div>
+      <div class="chat-hdr-acts">
         ${pillHtml(s.status)}
-        ${!isAdmin?`<button class="btn btn-ghost btn-sm" onclick="intervene('${phone}')">⏸ Interceder</button>`:`<button class="btn btn-ghost btn-sm" onclick="release('${phone}')">▶ Liberar IA</button>`}
+        ${!isAdmin?`<button class="btn btn-ghost btn-sm" onclick="intervene('${phone}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg> Interceder</button>`
+          :`<button class="btn btn-ghost btn-sm" onclick="release('${phone}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Liberar IA</button>`}
       </div>
     </div>
+    ${isAdmin?`<div class="paused-banner"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>Agente IA pausado · respondes tú</div>`:''}
     ${pend?`<div class="res-card-inner">
       <h4>◆ Reserva pendiente de confirmación</h4>
       <div class="res-grid">
@@ -803,17 +1057,27 @@ async function loadChat(phone,scroll=true){
       </div></div>`:''}
     <div class="msgs" id="chat-msgs">${renderMsgHtml(d.history||[])}</div>
     ${isAdmin?`<div class="admin-bar" id="admin-bar">
-      <textarea placeholder="Escribe como administrador…" rows="2" onkeydown="adminKey(event,'${phone}')" oninput="autoResize(this)"></textarea>
+      <textarea placeholder="Escribe como equipo de Feeling Vilanova…" rows="2" onkeydown="adminKey(event,'${phone}')" oninput="autoResize(this)"></textarea>
       <button class="btn btn-gold btn-sm" onclick="sendAdmin('${phone}')">Enviar</button>
+    </div>
+    <div style="flex:none;padding:10px 24px 14px;display:flex;align-items:center;gap:8px;border-top:1px solid rgba(232,200,116,.07)">
+      <span style="font-size:12px;color:#9a8e78">¿Listo? Devuelve el control al agente:</span>
+      <button class="btn btn-ghost btn-sm" onclick="release('${phone}')">▶ Liberar IA</button>
+    </div>`:''}
+    ${!isAdmin?`<div style="flex:none;padding:14px 24px;border-top:1px solid rgba(232,200,116,.08);display:flex;align-items:center;gap:10px;background:rgba(232,200,116,.03)">
+      <span style="width:8px;height:8px;border-radius:50%;background:#6fcf97;animation:pulse 2.4s infinite;flex:none"></span>
+      <span style="font-size:13px;color:#9a8e78">El agente IA está respondiendo automáticamente.</span>
     </div>`:''}`;
   if(scroll)setTimeout(()=>{const m=document.getElementById('chat-msgs');if(m)m.scrollTop=m.scrollHeight;},60);
 }
 
+function statusLabel(s){const m={active:'Activo',admin_mode:'Admin activo',needs_confirmation:'Pendiente confirmar',closed:'Cerrado'};return m[s]||s;}
+
 function renderMsgHtml(history){
   if(!history.length)return'<div class="empty-state">Sin mensajes</div>';
   return history.map(m=>{
-    const label=m.role==='assistant'?'<div class="msg-label">Gregory</div>':m.role==='admin'?'<div class="msg-label" style="color:var(--blue)">Admin</div>':'';
-    return`<div class="msg msg-${m.role}">${label}<div class="bubble">${esc(m.content)}</div><div class="msg-time">${fmtTime(m.created_at)}</div></div>`;
+    const who=m.role==='user'?'<div class="msg-who" style="color:#e8c874;text-align:right">Cliente</div>':m.role==='admin'?'<div class="msg-who" style="color:#7fe0a3">Admin</div>':'<div class="msg-who">Gregory</div>';
+    return`<div class="msg msg-${m.role}">${who}<div class="bubble">${esc(m.content)}</div><div class="msg-time">${fmtTime(m.created_at)}</div></div>`;
   }).join('');
 }
 
@@ -895,25 +1159,25 @@ async function loadMetrics(period,btn){
   setText('m-pend',d.pending);setText('m-canc',d.cancelled);
   setText('m-guests',d.totalGuests);setText('m-avg',d.avgGuests);
   renderTimeline(d.timeline);
-  renderBarChart('m-faq',d.faqBreakdown.map(x=>({label:x.category,count:x.count})),'var(--blue)');
-  renderBarChart('m-service',d.byService.map(x=>({label:x.service,count:x.count})),'var(--gold)');
+  renderBarChart('m-faq',d.faqBreakdown.map(x=>({label:x.category,count:x.count})),'#60a5fa');
+  renderBarChart('m-service',d.byService.map(x=>({label:x.service,count:x.count})),'#e8c874');
   renderFreqTable(d.frequentClients);
 }
 
 function renderTimeline(tl){
   const svg=document.getElementById('m-timeline');if(!svg)return;
-  if(!tl||!tl.length){svg.innerHTML='<text x="200" y="65" fill="#3a3630" text-anchor="middle" font-size="12" font-family="Poppins,sans-serif">Sin datos en este período</text>';return;}
+  if(!tl||!tl.length){svg.innerHTML='<text x="200" y="65" fill="#776c5a" text-anchor="middle" font-size="12" font-family="Manrope,sans-serif">Sin datos en este período</text>';return;}
   const W=400,H=120,PAD=16;
   const vals=tl.map(t=>(t.confirmed||0)+(t.pending||0)+(t.cancelled||0));
   const max=Math.max(...vals,1);
   const pts=tl.map((t,i)=>[PAD+i/(Math.max(tl.length-1,1))*(W-PAD*2),PAD+(1-vals[i]/max)*(H-PAD*2)]);
   const line=pts.map((p,i)=>(i===0?'M':'L')+p[0]+','+p[1]).join(' ');
   const area=`M${pts[0][0]},${H-PAD} `+pts.map(p=>'L'+p[0]+','+p[1]).join(' ')+` L${pts[pts.length-1][0]},${H-PAD} Z`;
-  svg.innerHTML=`<defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#bb9d6c" stop-opacity=".25"/><stop offset="100%" stop-color="#bb9d6c" stop-opacity="0"/></linearGradient></defs>
+  svg.innerHTML=`<defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8c874" stop-opacity=".25"/><stop offset="100%" stop-color="#e8c874" stop-opacity="0"/></linearGradient></defs>
     <path d="${area}" fill="url(#lg)"/>
-    <path d="${line}" stroke="#bb9d6c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="#bb9d6c"><title>${tl[i].date}: ${vals[i]} reservas</title></circle>`).join('')}
-    ${tl.length<=10?pts.map((p,i)=>`<text x="${p[0]}" y="${H-2}" text-anchor="middle" fill="#3a3630" font-size="9" font-family="Poppins,sans-serif">${(tl[i].date||'').slice(-5)}</text>`).join(''):''}`;
+    <path d="${line}" stroke="#e8c874" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#e8c874"><title>${tl[i].date}: ${vals[i]} reservas</title></circle>`).join('')}
+    ${tl.length<=10?pts.map((p,i)=>`<text x="${p[0]}" y="${H-2}" text-anchor="middle" fill="#776c5a" font-size="9" font-family="Manrope,sans-serif">${(tl[i].date||'').slice(-5)}</text>`).join(''):''}`;
 }
 
 function renderBarChart(elId,data,color){
@@ -931,13 +1195,11 @@ function renderFreqTable(clients){
   const el=document.getElementById('m-freq');if(!el)return;
   if(!clients||!clients.length){el.innerHTML='<div class="empty-state">Sin clientes frecuentes aún</div>';return;}
   el.innerHTML=`<table class="freq-table"><thead><tr><th>#</th><th>Cliente</th><th>Teléfono</th><th>Reservas</th></tr></thead><tbody>${
-    clients.map((c,i)=>`<tr><td style="color:var(--text-dim)">${i+1}</td><td>${esc(c.name||'—')}</td><td style="color:var(--text-muted)">${c.phone}</td><td style="color:var(--gold);font-weight:700">${c.reservations}</td></tr>`).join('')
+    clients.map((c,i)=>`<tr><td style="color:#776c5a">${i+1}</td><td>${esc(c.name||'—')}</td><td style="color:#9a8e78">${c.phone}</td><td style="color:#e8c874;font-weight:700;font-family:Sora,sans-serif">${c.reservations}</td></tr>`).join('')
   }</tbody></table>`;
 }
 
 // ── CLIENTES ──────────────────────────────────────────────────────────────────
-let clients=[],currentCliPhone=null;
-
 async function loadClients(){
   const d=await api('/crm/clients');if(!d)return;
   clients=d;renderClientList();
@@ -950,68 +1212,62 @@ function renderClientList(){
   const el=document.getElementById('cli-list');if(!el)return;
   if(!list.length){el.innerHTML='<div class="empty-state">Sin clientes registrados</div>';return;}
   el.innerHTML=list.map(c=>{
-    const statusClass=c.chat_status==='admin_mode'?'admin':c.chat_status==='needs_confirmation'?'pending':c.pending_count>0?'pending':'active';
-    const badge=c.pending_count>0?`<span class="pill pill-pending" style="font-size:10px">⏳ ${c.pending_count} pend.</span>`:'';
+    const ini=(c.name||c.phone_number||'?')[0].toUpperCase();
+    const dotColor=c.chat_status==='admin_mode'?'#f0b07a':c.pending_count>0?'#e8c874':'#6fcf97';
     return`<div class="hcard${c.phone_number===currentCliPhone?' sel':''}" onclick="loadClientDetail('${c.phone_number}')">
-      <div class="hcard-top">
-        <span class="hcard-name">${esc(c.name||c.phone_number)}</span>
-        <span class="hcard-res">${c.reservation_count} res.</span>
+      <div class="hcard-av">${ini}<span class="hcard-av-dot" style="background:${dotColor}"></span></div>
+      <div class="hcard-body">
+        <div class="hcard-top">
+          <span class="hcard-name">${esc(c.name||c.phone_number)}</span>
+          <span class="hcard-res">${c.reservation_count} res.</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
+          <span style="font-size:12px;color:#9a8e78;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${esc(c.email||c.phone_number)}</span>
+          <span style="font-size:11px;color:#776c5a;flex:none">${fmtDate(c.last_contact||c.created_at)}</span>
+        </div>
+        ${c.pending_count>0?`<div style="margin-top:5px">${pillHtml('needs_confirmation')}</div>`:''}
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
-        <span style="font-size:11px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${esc(c.email||c.phone_number)}</span>
-        <span style="font-size:11px;color:var(--text-dim);flex-shrink:0">${fmtDate(c.last_contact||c.created_at)}</span>
-      </div>
-      ${badge?`<div style="margin-top:4px">${badge}</div>`:''}
     </div>`;
   }).join('');
 }
 
 async function loadClientDetail(phone){
   currentCliPhone=phone;renderClientList();
-  const c=clients.find(x=>x.phone_number===phone);
-  if(!c)return;
+  const c=clients.find(x=>x.phone_number===phone);if(!c)return;
   const cliRes=await api(`/crm/client/${phone}/reservations`)||[];
-
-  // Merge into global reservations so findRes() works from this tab
   cliRes.forEach(r=>{
     const i=reservations.findIndex(x=>String(x.id)===String(r.id));
     if(i>=0)reservations[i]=r;else reservations.push(r);
   });
-
+  const ini=(c.name||phone||'?')[0].toUpperCase();
   const det=document.getElementById('cli-detail');if(!det)return;
-  const statusPill=c.chat_status==='admin_mode'?`<span class="pill pill-admin">Admin</span>`:
-    c.chat_status==='needs_confirmation'?`<span class="pill pill-pending">Pendiente</span>`:
-    c.chat_status==='active'?`<span class="pill pill-active">Activo</span>`:'';
-
   det.innerHTML=`
     <div class="chat-hdr">
-      <div class="chat-client">
+      <div class="chat-hdr-av" style="background:linear-gradient(145deg,#f5d77a,#c9952f 65%,#8a6516);color:#1a1206">${ini}</div>
+      <div class="chat-hdr-info">
         <h3>${esc(c.name||c.phone_number)}</h3>
         <p>${c.phone_number}${c.email?` · ${esc(c.email)}`:''} · Cliente desde ${fmtDate(c.created_at)}</p>
       </div>
-      <div class="chat-acts">
-        ${statusPill}
+      <div class="chat-hdr-acts">
+        ${pillHtml(c.chat_status||'active')}
         <button class="btn btn-ghost btn-sm" onclick="goToClientChat('${phone}')">💬 Ver chat</button>
       </div>
     </div>
     <div class="cli-stats-bar">
       <div class="cli-stat"><div class="cli-stat-val">${c.reservation_count}</div><div class="cli-stat-lbl">Total reservas</div></div>
-      <div class="cli-stat"><div class="cli-stat-val" style="color:var(--green)">${c.confirmed_count}</div><div class="cli-stat-lbl">Confirmadas</div></div>
-      <div class="cli-stat"><div class="cli-stat-val" style="color:var(--orange)">${c.pending_count}</div><div class="cli-stat-lbl">Pendientes</div></div>
-      <div class="cli-stat"><div class="cli-stat-val" style="color:var(--text-muted);font-size:13px">${fmtDate(c.last_contact)}</div><div class="cli-stat-lbl">Último contacto</div></div>
+      <div class="cli-stat"><div class="cli-stat-val" style="color:#7fe0a3">${c.confirmed_count}</div><div class="cli-stat-lbl">Confirmadas</div></div>
+      <div class="cli-stat"><div class="cli-stat-val" style="color:#f0b07a">${c.pending_count}</div><div class="cli-stat-lbl">Pendientes</div></div>
+      <div class="cli-stat"><div class="cli-stat-val" style="color:#9a8e78;font-size:14px">${fmtDate(c.last_contact)}</div><div class="cli-stat-lbl">Último contacto</div></div>
     </div>
     <div class="cli-res-list">
       ${cliRes.length?`
-        <div style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Historial de reservas</div>
+        <div style="font-size:10.5px;font-weight:700;color:#776c5a;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">Historial de reservas</div>
         ${cliRes.map(r=>`
           <div class="cli-res-item">
             <div class="cli-res-date">${fmtDate(r.date)}</div>
-            <div class="cli-res-info">
-              <strong>${esc(r.service||'—')}</strong>
-              <p>${(r.time||'').substring(0,5)} · ${r.num_guests} persona${r.num_guests>1?'s':''}${r.notes?` · ${esc(r.notes)}`:''}</p>
-            </div>
+            <div class="cli-res-info"><strong>${esc(r.service||'—')}</strong><p>${(r.time||'').substring(0,5)} · ${r.num_guests} persona${r.num_guests>1?'s':''}${r.notes?` · ${esc(r.notes)}`:''}</p></div>
             <div>${pillHtml(r.status)}</div>
-            ${r.status==='pending_confirmation'?`<button class="btn btn-success btn-sm" onclick="openConfirm('${r.id}')">✓ Confirmar</button>`:''}
+            ${r.status==='pending_confirmation'?`<button class="btn btn-success btn-sm" onclick="openConfirm('${r.id}')">✓</button>`:''}
           </div>`).join('')}
       `:'<div class="empty-state">Este cliente aún no tiene reservas</div>'}
     </div>`;
@@ -1030,15 +1286,15 @@ async function loadTestHistory(){
 }
 function renderTestMsgs(history){
   const el=document.getElementById('test-messages');if(!el)return;
-  if(!(history||[]).length){el.innerHTML='<div class="empty-state">Escribe algo para probar a Gregory 👋</div>';return;}
+  if(!(history||[]).length){el.innerHTML='<div class="empty-state">Escribe algo para probar al agente 👋</div>';return;}
   el.innerHTML=(history||[]).map(m=>{
     const isUser=m.role==='user';
     const isAdmin=m.role==='admin';
-    if(isAdmin)return`<div class="tmsg tmsg-agent"><div class="tmsg-label" style="color:var(--gold)">ADMIN</div><div class="tbubble" style="background:var(--gold-dim);border:1px solid var(--gold-border)">${esc(m.content)}</div><div class="ttime">${fmtTime(m.created_at)}</div></div>`;
-    return`<div class="tmsg ${isUser?'tmsg-user':'tmsg-agent'}">${!isUser?'<div class="tmsg-label">Gregory</div>':''}<div class="tbubble">${esc(m.content)}</div><div class="ttime">${fmtTime(m.created_at)}</div></div>`;
-  }).join('');scrollTestBottom();
+    if(isAdmin)return`<div class="tmsg tmsg-admin"><div class="tbubble">${esc(m.content)}</div></div>`;
+    return`<div class="tmsg ${isUser?'tmsg-user':'tmsg-agent'}"><div class="tbubble">${esc(m.content)}</div></div>`;
+  }).join('');
+  scrollTestBottom();
 }
-let _testPoll=null;
 function startTestPoll(){
   if(_testPoll)return;
   _testPoll=setInterval(async()=>{
@@ -1051,10 +1307,14 @@ function addTestBubble(role,content){
   const el=document.getElementById('test-messages');if(!el)return;
   if(el.querySelector('.empty-state'))el.innerHTML='';
   const isUser=role==='user';
-  el.innerHTML+=`<div class="tmsg ${isUser?'tmsg-user':'tmsg-agent'}">${!isUser?'<div class="tmsg-label">Gregory</div>':''}<div class="tbubble">${esc(content)}</div><div class="ttime">${fmtTime(new Date().toISOString())}</div></div>`;
+  el.innerHTML+=`<div class="tmsg ${isUser?'tmsg-user':'tmsg-agent'}"><div class="tbubble">${esc(content)}</div></div>`;
   scrollTestBottom();
 }
-function showTyping(){const el=document.getElementById('test-messages');el.innerHTML+=`<div class="tmsg tmsg-agent ttyping" id="typing-ind"><div class="tbubble"><div class="tdots"><span></span><span></span><span></span></div></div></div>`;scrollTestBottom();}
+function showTyping(){
+  const el=document.getElementById('test-messages');
+  el.innerHTML+=`<div class="tmsg tmsg-agent ttyping" id="typing-ind"><div class="tbubble"><div class="tdots"><span></span><span></span><span></span></div></div></div>`;
+  scrollTestBottom();
+}
 function hideTyping(){document.getElementById('typing-ind')?.remove();}
 async function sendTest(){
   const input=document.getElementById('test-input');const msg=input.value.trim();if(!msg)return;
@@ -1066,7 +1326,7 @@ async function sendTest(){
   if(d?.admin_mode){
     renderTestMsgs(d.history||[]);
     const el=document.getElementById('test-messages');
-    if(el)el.innerHTML+=`<div class="tmsg tmsg-agent"><div class="tbubble" style="background:var(--orange-bg);border:1px solid var(--orange-bd);color:var(--orange)">⏸ Admin intercedido — la IA no responde. Los mensajes del admin aparecen en dorado.</div></div>`;
+    if(el)el.innerHTML+=`<div class="tmsg tmsg-agent"><div class="tbubble" style="background:rgba(240,176,122,.12);border-color:rgba(240,176,122,.28);color:#f0b07a">⏸ Admin intercedido — la IA no responde.</div></div>`;
     scrollTestBottom();
   } else if(d?.response){
     addTestBubble('assistant',d.response);
@@ -1089,6 +1349,10 @@ async function loadSettings(){
   document.getElementById('s-tone').value=d.tone||'amigable, profesional y cálido';
   document.getElementById('s-context').value=d.extra_context||'';
   document.getElementById('s-avatar').value=d.avatar_url||'';
+  const sbName=document.getElementById('sb-agent-name');if(sbName)sbName.textContent=`${d.agent_name||'Gregory'} está activo`;
+  const heroName=document.getElementById('hero-agent-name');if(heroName)heroName.textContent=d.agent_name||'Gregory';
+  const tcn=document.getElementById('tc-name');if(tcn)tcn.textContent=d.agent_name||'Gregory';
+  const tct=document.getElementById('tc-tone');if(tct)tct.textContent=d.tone||'amigable, profesional y cálido';
   previewAvatar();
 }
 function previewAvatar(){
@@ -1097,10 +1361,13 @@ function previewAvatar(){
   const initial=name[0]?.toUpperCase()||'G';
   const aprev=document.getElementById('avatar-prev');
   const tav=document.getElementById('test-av');
-  if(aprev)aprev.innerHTML=url?`<img src="${url}" onerror="this.parentElement.textContent='${initial}'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:`${initial}`;
-  if(tav)tav.innerHTML=url?`<img src="${url}" onerror="this.parentElement.textContent='${initial}'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:`${initial}`;
+  if(aprev)aprev.innerHTML=url?`<img src="${url}" onerror="this.parentElement.textContent='${initial}'">`:`${initial}`;
+  if(tav)tav.innerHTML=url?`<img src="${url}" onerror="this.parentElement.textContent='${initial}'" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`:`${initial}`;
   const tn=document.getElementById('test-agent-name');
-  if(tn)tn.textContent=`${name} — Modo de prueba`;
+  if(tn)tn.innerHTML=`${esc(name)}<span class="test-hdr-badge">MODO PRUEBA</span>`;
+  const tcn=document.getElementById('tc-name');if(tcn)tcn.textContent=name;
+  const sbName=document.getElementById('sb-agent-name');if(sbName)sbName.textContent=`${name} está activo`;
+  const heroName=document.getElementById('hero-agent-name');if(heroName)heroName.textContent=name;
 }
 async function saveSettings(){
   const body={
@@ -1109,13 +1376,24 @@ async function saveSettings(){
     extra_context:document.getElementById('s-context').value.trim(),
     avatar_url:document.getElementById('s-avatar').value.trim(),
   };
+  const tct=document.getElementById('tc-tone');if(tct)tct.textContent=body.tone;
   const d=await api('/crm/settings',{method:'PUT',body:JSON.stringify(body)});
   if(d){const ok=document.getElementById('save-ok');ok.style.display='inline';setTimeout(()=>{ok.style.display='none';},3000);previewAvatar();}
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 function pillHtml(status){
-  const m={needs_confirmation:'<span class="pill pill-pending">◆ Pendiente</span>',confirmed:'<span class="pill pill-confirmed">✓ Confirmada</span>',cancelled:'<span class="pill pill-cancelled">✗ Anulada</span>',admin_mode:'<span class="pill pill-admin">⏸ Admin</span>',active:'<span class="pill pill-active">● Activo</span>',closed:'<span class="pill pill-completed">Cerrado</span>',completed:'<span class="pill pill-completed">Completada</span>'};
+  const dot=(c)=>`<span style="width:6px;height:6px;border-radius:50%;background:${c};flex:none"></span>`;
+  const m={
+    needs_confirmation:`<span class="pill pill-pending">${dot('#e8c874')}Pendiente</span>`,
+    pending_confirmation:`<span class="pill pill-pending">${dot('#e8c874')}Pendiente</span>`,
+    confirmed:`<span class="pill pill-confirmed">${dot('#7fe0a3')}Confirmada</span>`,
+    cancelled:`<span class="pill pill-cancelled">${dot('#ef9a9a')}Anulada</span>`,
+    admin_mode:`<span class="pill pill-admin">${dot('#f0b07a')}Admin</span>`,
+    active:`<span class="pill pill-active">${dot('#7fe0a3')}Activo</span>`,
+    closed:`<span class="pill pill-completed">Cerrado</span>`,
+    completed:`<span class="pill pill-completed">Completada</span>`,
+  };
   return m[status]||`<span class="pill">${status}</span>`;
 }
 function fmtTime(iso){if(!iso)return'';const d=new Date(iso),now=new Date();return d.toDateString()===now.toDateString()?d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}):d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});}
