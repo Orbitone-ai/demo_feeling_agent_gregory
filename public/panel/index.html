@@ -849,7 +849,7 @@ textarea,input,select{font-family:Manrope,sans-serif}
 let token='',sessions=[],reservations=[],currentPhone=null,currentReservation=null,
     currentResFilter='',currentTab='principal',metricsLoaded=false,refreshTimer=null;
 let clients=[],currentCliPhone=null;
-let _testPoll=null;
+let _testPoll=null,_testPollLastCount=-1,_testPollLastContent='';
 
 // ── AUTH ───────────────────────────────────────────────────────────────────────
 async function login(){
@@ -1299,7 +1299,13 @@ function startTestPoll(){
   if(_testPoll)return;
   _testPoll=setInterval(async()=>{
     const d=await api('/crm/session/test_demo_crm');
-    if(d)renderTestMsgs(d.history||[]);
+    if(!d)return;
+    const h=d.history||[];
+    const lastContent=h.length?h[h.length-1].content:'';
+    if(h.length===_testPollLastCount&&lastContent===_testPollLastContent)return;
+    _testPollLastCount=h.length;
+    _testPollLastContent=lastContent;
+    renderTestMsgs(h);
   },3000);
 }
 function stopTestPoll(){clearInterval(_testPoll);_testPoll=null;}
